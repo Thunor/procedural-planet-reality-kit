@@ -66,10 +66,6 @@ class PlanetEntity: Entity {
         
         var customMaterial = try! await ShaderGraphMaterial(named: "/Root/MyMaterial/MyMaterial",
                                                             from: "Immersive")
-//        var customMaterial = try! await ShaderGraphMaterial(named: "/Root/MyMaterial/MyMaterial",
-//                                                            from: "Immersive",
-//                                                            in: realityKitContentBundle)
-        
         try! customMaterial.setParameter(name: "min", value: .float(elevationMin))
         try! customMaterial.setParameter(name: "max", value: .float(elevationMax))
         
