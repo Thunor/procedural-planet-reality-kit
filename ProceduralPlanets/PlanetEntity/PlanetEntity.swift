@@ -7,7 +7,6 @@
 
 import Foundation
 import RealityKit
-import RealityKitContent
 import Combine
 import SwiftUI
 import CoreImage

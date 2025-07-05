@@ -21,7 +21,6 @@
 		472223232C67A0D5009B9668 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472223222C67A0CB009B9668 /* ColorGenerator.swift */; };
 		474B7FBD2C4FBE8B00474654 /* NoiseFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474B7FBC2C4FBE8600474654 /* NoiseFilter.swift */; };
 		474B7FC12C4FCC5E00474654 /* NoiseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474B7FC02C4FCC5D00474654 /* NoiseSettingsView.swift */; };
-		47927A452C4F3F9700B42889 /* SimplexNoise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 47927A442C4F3F9700B42889 /* SimplexNoise.cpp */; };
 		47CD2C322C6E23AB005F9C80 /* PlanetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C312C6E23A0005F9C80 /* PlanetModel.swift */; };
 		47CD2C342C7028AD005F9C80 /* PlanetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */; };
 		47CD2C382C72F456005F9C80 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C372C72F456005F9C80 /* AppModel.swift */; };
@@ -46,9 +45,6 @@
 		472223222C67A0CB009B9668 /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
 		474B7FBC2C4FBE8600474654 /* NoiseFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseFilter.swift; sourceTree = "<group>"; };
 		474B7FC02C4FCC5D00474654 /* NoiseSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseSettingsView.swift; sourceTree = "<group>"; };
-		47927A422C4F3F3C00B42889 /* ProceduralPlanets-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "ProceduralPlanets-Bridging-Header.h"; path = "ProceduralPlanets/SimplexNoise/ProceduralPlanets-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		47927A432C4F3F9700B42889 /* SimplexNoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimplexNoise.h; sourceTree = "<group>"; };
-		47927A442C4F3F9700B42889 /* SimplexNoise.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimplexNoise.cpp; sourceTree = "<group>"; };
 		47CD2C312C6E23A0005F9C80 /* PlanetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetModel.swift; sourceTree = "<group>"; };
 		47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetLibrary.swift; sourceTree = "<group>"; };
 		47CD2C372C72F456005F9C80 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -95,7 +91,6 @@
 				471976022C461326006A909F /* ProceduralPlanetsApp.swift */,
 				47F64E4D2C4DDC1900626B9D /* UI */,
 				47CD2C392C74B237005F9C80 /* PlanetEntity */,
-				47927A272C4E7CB700B42889 /* SimplexNoise */,
 				471976082C461327006A909F /* Assets.xcassets */,
 				6F1EF8232E19B429005443D0 /* Immersive.usda */,
 				4719760D2C461327006A909F /* Info.plist */,
@@ -110,16 +105,6 @@
 				4719760B2C461327006A909F /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		47927A272C4E7CB700B42889 /* SimplexNoise */ = {
-			isa = PBXGroup;
-			children = (
-				47927A432C4F3F9700B42889 /* SimplexNoise.h */,
-				47927A442C4F3F9700B42889 /* SimplexNoise.cpp */,
-				47927A422C4F3F3C00B42889 /* ProceduralPlanets-Bridging-Header.h */,
-			);
-			path = SimplexNoise;
 			sourceTree = "<group>";
 		};
 		47CD2C392C74B237005F9C80 /* PlanetEntity */ = {
@@ -234,7 +219,6 @@
 				4721C78A2C6CC8BA002A58F7 /* SegmentedTabView.swift in Sources */,
 				4721C7862C6CC747002A58F7 /* MeshSettingsView.swift in Sources */,
 				471976312C468662006A909F /* TerrainFaceGenerator.swift in Sources */,
-				47927A452C4F3F9700B42889 /* SimplexNoise.cpp in Sources */,
 				4721468E2C95011E00979A28 /* PlanetView.swift in Sources */,
 				47CD2C382C72F456005F9C80 /* AppModel.swift in Sources */,
 				472223232C67A0D5009B9668 /* ColorGenerator.swift in Sources */,
@@ -395,6 +379,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.0;
@@ -422,6 +407,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.0;

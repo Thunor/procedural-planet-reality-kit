@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import RealityKitContent
 import SwiftData
 
 @main
