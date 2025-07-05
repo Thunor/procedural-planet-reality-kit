@@ -65,8 +65,10 @@ class PlanetEntity: Entity {
     private func createMaterial(elevationMin: Float, elevationMax: Float) async -> ShaderGraphMaterial {
         
         var customMaterial = try! await ShaderGraphMaterial(named: "/Root/MyMaterial/MyMaterial",
-                                                            from: "Immersive",
-                                                            in: realityKitContentBundle)
+                                                            from: "Immersive")
+//        var customMaterial = try! await ShaderGraphMaterial(named: "/Root/MyMaterial/MyMaterial",
+//                                                            from: "Immersive",
+//                                                            in: realityKitContentBundle)
         
         try! customMaterial.setParameter(name: "min", value: .float(elevationMin))
         try! customMaterial.setParameter(name: "max", value: .float(elevationMax))

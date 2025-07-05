@@ -47,7 +47,7 @@ def Xform "Ground"
         token outputs:mtlx:surface.connect = </Ground/Material/PreviewSurface.outputs:out>
         token outputs:realitykit:vertex
         float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (1584.082, 297.875)
-        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 208
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 217
 
         def Shader "PreviewSurface"
         {
@@ -67,7 +67,7 @@ def Xform "Ground"
             float inputs:roughness = 1
             token outputs:out
             float2 ui:nodegraph:node:pos = (1358.9023, 236.28516)
-            int ui:nodegraph:node:stackingOrder = 208
+            int ui:nodegraph:node:stackingOrder = 218
             string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["Advanced"]
         }
 
@@ -93,7 +93,7 @@ def Xform "Ground"
             string inputs:varname = "emissionUV"
             float2 outputs:out
             float2 ui:nodegraph:node:pos = (25.28125, 95.32422)
-            int ui:nodegraph:node:stackingOrder = 155
+            int ui:nodegraph:node:stackingOrder = 223
         }
 
         def Shader "Read_AttenuationUV"
@@ -122,7 +122,7 @@ def Xform "Ground"
             float2 inputs:emitterUV.connect = </Ground/Material/Read_EmissionUV.outputs:out>
             color4f outputs:out
             float2 ui:nodegraph:node:pos = (278.48438, 138.34766)
-            int ui:nodegraph:node:stackingOrder = 167
+            int ui:nodegraph:node:stackingOrder = 221
         }
 
         def Shader "Reflection_Specular"
@@ -133,7 +133,7 @@ def Xform "Ground"
             float3 inputs:unreflected_direction.connect = </Ground/Material/ViewDirection.outputs:out>
             color4f outputs:out
             float2 ui:nodegraph:node:pos = (304.35938, 380.5625)
-            int ui:nodegraph:node:stackingOrder = 168
+            int ui:nodegraph:node:stackingOrder = 222
         }
 
         def Shader "Separate4" (
@@ -147,7 +147,7 @@ def Xform "Ground"
             float outputs:outg
             float outputs:outr
             float2 ui:nodegraph:node:pos = (570.3125, 468.03516)
-            int ui:nodegraph:node:stackingOrder = 169
+            int ui:nodegraph:node:stackingOrder = 220
         }
 
         def Shader "Combine3" (
@@ -173,7 +173,7 @@ def Xform "Ground"
             float inputs:mix.connect = </Ground/Material/Separate4.outputs:outa>
             color3f outputs:out
             float2 ui:nodegraph:node:pos = (934.75, 462.09375)
-            int ui:nodegraph:node:stackingOrder = 212
+            int ui:nodegraph:node:stackingOrder = 219
         }
 
         def Shader "Add" (

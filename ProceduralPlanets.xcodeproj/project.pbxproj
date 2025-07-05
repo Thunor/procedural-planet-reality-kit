@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,6 +27,7 @@
 		47CD2C342C7028AD005F9C80 /* PlanetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */; };
 		47CD2C382C72F456005F9C80 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C372C72F456005F9C80 /* AppModel.swift */; };
 		47CD2C3B2C74B2CC005F9C80 /* ShapeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C3A2C74B2CB005F9C80 /* ShapeGenerator.swift */; };
+		6F1EF8242E19B429005443D0 /* Immersive.usda in Resources */ = {isa = PBXBuildFile; fileRef = 6F1EF8232E19B429005443D0 /* Immersive.usda */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,7 +55,12 @@
 		47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetLibrary.swift; sourceTree = "<group>"; };
 		47CD2C372C72F456005F9C80 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		47CD2C3A2C74B2CB005F9C80 /* ShapeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeGenerator.swift; sourceTree = "<group>"; };
+		6F1EF8232E19B429005443D0 /* Immersive.usda */ = {isa = PBXFileReference; lastKnownFileType = text; path = Immersive.usda; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		6F8733E72E19430400C16C1F /* SwiftNoise */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SwiftNoise; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		471975F82C461326006A909F /* Frameworks */ = {
@@ -88,12 +94,14 @@
 		471975FD2C461326006A909F /* ProceduralPlanets */ = {
 			isa = PBXGroup;
 			children = (
+				6F8733E72E19430400C16C1F /* SwiftNoise */,
 				47CD2C372C72F456005F9C80 /* AppModel.swift */,
 				471976022C461326006A909F /* ProceduralPlanetsApp.swift */,
 				47F64E4D2C4DDC1900626B9D /* UI */,
 				47CD2C392C74B237005F9C80 /* PlanetEntity */,
 				47927A272C4E7CB700B42889 /* SimplexNoise */,
 				471976082C461327006A909F /* Assets.xcassets */,
+				6F1EF8232E19B429005443D0 /* Immersive.usda */,
 				4719760D2C461327006A909F /* Info.plist */,
 				4719760A2C461327006A909F /* Preview Content */,
 			);
@@ -169,6 +177,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				6F8733E72E19430400C16C1F /* SwiftNoise */,
+			);
 			name = ProceduralPlanets;
 			packageProductDependencies = (
 				471976002C461326006A909F /* RealityKitContent */,
@@ -215,6 +226,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F1EF8242E19B429005443D0 /* Immersive.usda in Resources */,
 				4719760C2C461327006A909F /* Preview Assets.xcassets in Resources */,
 				471976092C461327006A909F /* Assets.xcassets in Resources */,
 			);

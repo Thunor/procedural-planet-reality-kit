@@ -16,9 +16,11 @@ struct NoiseFilter {
         
         for _ in 0..<noiseSettings.numberOfLayers {
             let input = point * frequency + noiseSettings.center
-            let n = SimplexNoise.noise(input.x,
-                                       input.y,
-                                       input.z)
+            let classic3d = ClassicNoise3D(amplitude: Double(amplitude), frequency: Double(frequency), seed: 0)
+            let n = Float(classic3d.evaluate(Double(input.x), Double(input.y), Double(input.z)))
+//            let n = SimplexNoise.noise(input.x,
+//                                       input.y,
+//                                       input.z)
             noise += (n + 1) * 0.5 * amplitude
             frequency *= noiseSettings.roughness
             amplitude *= noiseSettings.persistance
