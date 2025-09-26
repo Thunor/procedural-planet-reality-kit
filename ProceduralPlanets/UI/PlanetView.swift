@@ -7,11 +7,10 @@
 
 import SwiftUI
 import RealityKit
-import RealityKitContent
 
 struct PlanetView: View {
     
-    @Environment(\.physicalMetrics) var physicalMetrics
+//    @Environment(\.physicalMetrics) var physicalMetrics
     
     var viewModel: PlanetEditorViewModel
     

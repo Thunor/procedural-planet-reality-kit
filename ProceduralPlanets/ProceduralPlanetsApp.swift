@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
-import RealityKitContent
+//import RealityKitContent
 import SwiftData
 
 @main
 struct ProceduralPlanetsApp: App {
     
-    @Environment(\.physicalMetrics) var physicalMetrics
+//    @Environment(\.physicalMetrics) var physicalMetrics
     
     @State var appState = AppState()
     

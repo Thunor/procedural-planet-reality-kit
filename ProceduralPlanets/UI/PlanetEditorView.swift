@@ -12,7 +12,7 @@ import CoreGraphics
 
 struct EditorControlsView: View {
     
-    @Environment(\.physicalMetrics) var physicalMetrics
+//    @Environment(\.physicalMetrics) var physicalMetrics
     
     var viewModel: PlanetEditorViewModel
     
@@ -105,7 +105,7 @@ class PlanetEditorViewModel {
 
 struct PlanetEditorView: View {
     
-    @Environment(\.physicalMetrics) var physicalMetrics
+//    @Environment(\.physicalMetrics) var physicalMetrics
     
     @State var viewModel: PlanetEditorViewModel
     
