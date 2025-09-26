@@ -15,6 +15,7 @@ struct PlanetView: View {
     let root = Entity()
     
     @State private var planetEntity: PlanetEntity?
+    @State private var rotationTimer: Timer?
     
     var body: some View {
         RealityView { content in
@@ -56,6 +57,9 @@ struct PlanetView: View {
             
             root.addChild(planet)
             
+            // Start rotation timer
+            startRotationTimer()
+            
         } update: { content in
             // Update block - camera positioning is handled by orbit controls
         }
@@ -82,6 +86,27 @@ struct PlanetView: View {
             }
         }
         .realityViewCameraControls(.orbit)
+        .onDisappear {
+            stopRotationTimer()
+        }
+    }
+    
+    private func startRotationTimer() {
+        stopRotationTimer() // Stop any existing timer
+        rotationTimer = Timer.scheduledTimer(withTimeInterval: 1/60.0, repeats: true) { _ in
+            guard let planetEntity = planetEntity else { return }
+            
+            // Rotate 1.8 degrees per second (360 degrees in 200 seconds)
+            let rotationSpeed: Float = 0.003141593 // 1.8 degrees in radians per second at 60fps
+            let currentRotation = planetEntity.transform.rotation
+            let yRotation = simd_quatf(angle: rotationSpeed, axis: [0, 1, 0])
+            planetEntity.transform.rotation = currentRotation * yRotation
+        }
+    }
+    
+    private func stopRotationTimer() {
+        rotationTimer?.invalidate()
+        rotationTimer = nil
     }
 
 }

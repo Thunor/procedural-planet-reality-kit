@@ -298,7 +298,34 @@ extension PlanetModel {
         planetOne.name = "Earth"
         
         let planetTwo = PlanetModel.samplePlanet()
-        planetOne.name = "Mars"
+        planetTwo.name = "Mars"
+        // Add craters to Mars
+        let craterLayer = NoiseLayer(
+            enabled: true,
+            useFirstLayerAsMask: false,
+            noiseSettings: NoiseSettings(
+                numberOfLayers: 1,
+                persistance: 0.5,
+                baseRoughness: 1.0,
+                strength: 0.3,
+                roughness: 1.0,
+                center: SIMD3<Float>(0, 0, 0),
+                minValue: 0.0
+            ),
+            craterSettings: CraterSettings(
+                craterCount: 75,
+                minRadius: 0.01,
+                maxRadius: 0.08,
+                rimHeight: 0.4,
+                rimWidth: 0.15,
+                depth: 0.6,
+                randomSeed: 54321,
+                distribution: .uniform,
+                fadeDistance: 0.9
+            ),
+            layerType: .craters
+        )
+        planetTwo.meshConfiguration.shapeSettings.noiseLayers.append(craterLayer)
         
         modelContext.insert(planetOne)
         modelContext.insert(planetTwo)

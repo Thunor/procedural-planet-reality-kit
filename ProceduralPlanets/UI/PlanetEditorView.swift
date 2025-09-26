@@ -141,49 +141,49 @@ struct PlanetEditorView: View {
                                                          
 }
 
-#Preview {
+#Preview("Planet Editor") {
     PlanetEditorView(planetModel: .samplePlanet())
         .frame(width: 1000, height: 700)
 }
 
-extension PlanetModel {
-    
-    static func samplePlanet() -> PlanetModel {
-        let firstLayerSettings = NoiseSettings(numberOfLayers: 5,
-                                               persistance: 0.4,
-                                               baseRoughness: 1.2,
-                                               strength: 0.3,
-                                               roughness: 2,
-                                               center: .zero,
-                                               minValue: 0.95)
-        let firstNoiseLayer = NoiseLayer(enabled: true,
-                                         useFirstLayerAsMask: false,
-                                         noiseSettings: firstLayerSettings)
-        
-        let secondLayerSettings = NoiseSettings(numberOfLayers: 5,
-                                                persistance: 0.5,
-                                                baseRoughness: 1,
-                                                strength: 4,
-                                                roughness: 2,
-                                                center: .init(x: 0, y: 0, z: 0),
-                                                minValue: 1.2)
-        let secondNoiseLayer = NoiseLayer(enabled: true,
-                                          useFirstLayerAsMask: true,
-                                          noiseSettings: secondLayerSettings)
-        
-        let shapeSettings = ShapeSettings(radius: 0.15, noiseLayers: [firstNoiseLayer,
-                                                                     secondNoiseLayer
-                                                                    ])
-        let meshConfiguration = MeshConfiguration(resolution: 50,
-                                                  shapeSettings: shapeSettings)
-        
-        let textureConfiguration = TextureConfiguration(gradientPoints: [
-            GradientPoint(color: Color(red: 0, green: 0, blue: 0.5), position: 0),
-            GradientPoint(color: Color(red: 1, green: 1, blue: 1), position: 1)
-        ])
-        return PlanetModel(name: "Sample Planet",
-                           meshConfiguration: meshConfiguration,
-                           textureConfiguration: textureConfiguration)
-    }
-    
-}
+//extension PlanetModel {
+//    
+//    static func samplePlanet() -> PlanetModel {
+//        let firstLayerSettings = NoiseSettings(numberOfLayers: 5,
+//                                               persistance: 0.4,
+//                                               baseRoughness: 1.2,
+//                                               strength: 0.3,
+//                                               roughness: 2,
+//                                               center: .zero,
+//                                               minValue: 0.95)
+//        let firstNoiseLayer = NoiseLayer(enabled: true,
+//                                         useFirstLayerAsMask: false,
+//                                         noiseSettings: firstLayerSettings)
+//        
+//        let secondLayerSettings = NoiseSettings(numberOfLayers: 5,
+//                                                persistance: 0.5,
+//                                                baseRoughness: 1,
+//                                                strength: 4,
+//                                                roughness: 2,
+//                                                center: .init(x: 0, y: 0, z: 0),
+//                                                minValue: 1.2)
+//        let secondNoiseLayer = NoiseLayer(enabled: true,
+//                                          useFirstLayerAsMask: true,
+//                                          noiseSettings: secondLayerSettings)
+//        
+//        let shapeSettings = ShapeSettings(radius: 0.15, noiseLayers: [firstNoiseLayer,
+//                                                                     secondNoiseLayer
+//                                                                    ])
+//        let meshConfiguration = MeshConfiguration(resolution: 50,
+//                                                  shapeSettings: shapeSettings)
+//        
+//        let textureConfiguration = TextureConfiguration(gradientPoints: [
+//            GradientPoint(color: Color(red: 0, green: 0, blue: 0.5), position: 0),
+//            GradientPoint(color: Color(red: 1, green: 1, blue: 1), position: 1)
+//        ])
+//        return PlanetModel(name: "Sample Planet",
+//                           meshConfiguration: meshConfiguration,
+//                           textureConfiguration: textureConfiguration)
+//    }
+//    
+//}

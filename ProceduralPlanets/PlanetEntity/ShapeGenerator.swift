@@ -12,35 +12,74 @@ struct ShapeGenerator {
     
     var shapeSettings: ShapeSettings
     var noiseFilters: [NoiseFilter]
+    var craterFilters: [CraterFilter]
     var elevationMinMax: MinMax
     
     init(shapeSettings: ShapeSettings) {
         self.shapeSettings = shapeSettings
-        self.noiseFilters = shapeSettings.noiseLayers.map({ NoiseFilter(noiseSettings: $0.noiseSettings) })
+        self.noiseFilters = []
+        self.craterFilters = []
         self.elevationMinMax = MinMax()
+        
+        // Initialize filters based on layer type
+        for layer in shapeSettings.noiseLayers {
+            switch layer.layerType {
+            case .standard:
+                noiseFilters.append(NoiseFilter(noiseSettings: layer.noiseSettings))
+                craterFilters.append(CraterFilter(craterSettings: CraterSettings())) // Dummy
+            case .craters:
+                noiseFilters.append(NoiseFilter(noiseSettings: layer.noiseSettings)) // Dummy
+                if let craterSettings = layer.craterSettings {
+                    craterFilters.append(CraterFilter(craterSettings: craterSettings))
+                } else {
+                    craterFilters.append(CraterFilter(craterSettings: CraterSettings()))
+                }
+            }
+        }
     }
     
     func calculatePointOnPlanet(pointOnUnitSphere: SIMD3<Float>) -> SIMD3<Float> {
         var firstLayerValue: Float = 0
         var elevation: Float = 0
         
-        if noiseFilters.count > 0 {
-            firstLayerValue = noiseFilters[0].evaluatePoint(pointOnUnitSphere)
-            if shapeSettings.noiseLayers[0].enabled {
-                elevation = firstLayerValue
-            }
-        }
-        
-        if !noiseFilters.isEmpty {
-            for i in 1..<noiseFilters.count {
-                if shapeSettings.noiseLayers[i].enabled {
-                    let mask = shapeSettings.noiseLayers[i].useFirstLayerAsMask ? firstLayerValue : 1
-                    elevation += noiseFilters[i].evaluatePoint(pointOnUnitSphere) * mask
+        // Process first layer
+        if !shapeSettings.noiseLayers.isEmpty && shapeSettings.noiseLayers[0].enabled {
+            switch shapeSettings.noiseLayers[0].layerType {
+            case .standard:
+                if !noiseFilters.isEmpty {
+                    firstLayerValue = noiseFilters[0].evaluatePoint(pointOnUnitSphere)
+                    elevation = firstLayerValue
+                }
+            case .craters:
+                if !craterFilters.isEmpty {
+                    firstLayerValue = craterFilters[0].evaluatePoint(pointOnUnitSphere)
+                    elevation = firstLayerValue
                 }
             }
         }
         
-        elevation = shapeSettings.radius * (1+elevation)
+        // Process remaining layers
+        for i in 1..<shapeSettings.noiseLayers.count {
+            if shapeSettings.noiseLayers[i].enabled {
+                let mask = shapeSettings.noiseLayers[i].useFirstLayerAsMask ? firstLayerValue : 1
+                var layerValue: Float = 0
+                
+                switch shapeSettings.noiseLayers[i].layerType {
+                case .standard:
+                    if i < noiseFilters.count {
+                        layerValue = noiseFilters[i].evaluatePoint(pointOnUnitSphere)
+                    }
+                case .craters:
+                    if i < craterFilters.count {
+                        layerValue = craterFilters[i].evaluatePoint(pointOnUnitSphere)
+                    }
+                }
+                
+                elevation += layerValue * mask
+            }
+        }
+        
+        elevation = shapeSettings.radius * (1 + elevation)
         elevationMinMax.addValue(elevation)
         
         return pointOnUnitSphere * elevation
