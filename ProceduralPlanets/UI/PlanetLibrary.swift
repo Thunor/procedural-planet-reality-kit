@@ -84,25 +84,19 @@ struct PlanetLibrary: View {
             }
         } detail: {
             if let selectedPlanet {
-                VStack(spacing: 20) {
-                    Image(systemName: "globe")
-                        .font(.system(size: 60))
-                        .foregroundStyle(.blue)
-                    Text(selectedPlanet.name)
-                        .font(.largeTitle)
-                    Text("Procedural Planet")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
-                    
-                    Button("Open in Editor") {
-                        let uuid = UUID()
-                        appState.planetModelMap[uuid] = selectedPlanet
-                        openWindow(value: uuid)
+                VStack(spacing: 0) {
+                    // Planet name and info header
+                    VStack(spacing: 8) {
+                        Text(selectedPlanet.name)
+                            .font(.largeTitle)
+                            .padding(.top)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+                    .padding()
+                    
+                    // 3D Planet view
+                    PlanetView(viewModel: PlanetEditorViewModel(planetModel: selectedPlanet))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(NSColor.controlBackgroundColor))
             } else {
                 VStack(spacing: 20) {
