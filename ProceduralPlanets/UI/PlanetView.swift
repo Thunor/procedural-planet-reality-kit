@@ -7,11 +7,8 @@
 
 import SwiftUI
 import RealityKit
-import RealityKitContent
 
 struct PlanetView: View {
-    
-    @Environment(\.physicalMetrics) var physicalMetrics
     
     var viewModel: PlanetEditorViewModel
     
@@ -43,6 +40,7 @@ struct PlanetView: View {
                 self.planetEntity?.updateImageTexture(newValue)
             }
         }
+        .realityViewCameraControls(.orbit)
     }
 
 }

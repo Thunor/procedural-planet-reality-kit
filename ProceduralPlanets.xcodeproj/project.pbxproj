@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		471976012C461326006A909F /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 471976002C461326006A909F /* RealityKitContent */; };
 		471976032C461326006A909F /* ProceduralPlanetsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471976022C461326006A909F /* ProceduralPlanetsApp.swift */; };
 		471976092C461327006A909F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 471976082C461327006A909F /* Assets.xcassets */; };
 		4719760C2C461327006A909F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4719760B2C461327006A909F /* Preview Assets.xcassets */; };
@@ -27,11 +26,11 @@
 		47CD2C342C7028AD005F9C80 /* PlanetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */; };
 		47CD2C382C72F456005F9C80 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C372C72F456005F9C80 /* AppModel.swift */; };
 		47CD2C3B2C74B2CC005F9C80 /* ShapeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C3A2C74B2CB005F9C80 /* ShapeGenerator.swift */; };
+		6FC774E02E21BFD70029DDF8 /* Immersive.usda in Resources */ = {isa = PBXBuildFile; fileRef = 6FC774DF2E21BFD70029DDF8 /* Immersive.usda */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		471975FB2C461326006A909F /* ProceduralPlanets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProceduralPlanets.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		471975FF2C461326006A909F /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		471976022C461326006A909F /* ProceduralPlanetsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProceduralPlanetsApp.swift; sourceTree = "<group>"; };
 		471976082C461327006A909F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4719760B2C461327006A909F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -54,6 +53,8 @@
 		47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetLibrary.swift; sourceTree = "<group>"; };
 		47CD2C372C72F456005F9C80 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		47CD2C3A2C74B2CB005F9C80 /* ShapeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeGenerator.swift; sourceTree = "<group>"; };
+		6FBD60AB2E86B029003C9634 /* MACOS_CONVERSION_NOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MACOS_CONVERSION_NOTES.md; sourceTree = "<group>"; };
+		6FC774DF2E21BFD70029DDF8 /* Immersive.usda */ = {isa = PBXFileReference; lastKnownFileType = text; path = Immersive.usda; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +62,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				471976012C461326006A909F /* RealityKitContent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,8 +72,8 @@
 			isa = PBXGroup;
 			children = (
 				471975FD2C461326006A909F /* ProceduralPlanets */,
-				471975FE2C461326006A909F /* Packages */,
 				471975FC2C461326006A909F /* Products */,
+				6FBD60AB2E86B029003C9634 /* MACOS_CONVERSION_NOTES.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,18 +94,11 @@
 				47CD2C392C74B237005F9C80 /* PlanetEntity */,
 				47927A272C4E7CB700B42889 /* SimplexNoise */,
 				471976082C461327006A909F /* Assets.xcassets */,
+				6FC774DF2E21BFD70029DDF8 /* Immersive.usda */,
 				4719760D2C461327006A909F /* Info.plist */,
 				4719760A2C461327006A909F /* Preview Content */,
 			);
 			path = ProceduralPlanets;
-			sourceTree = "<group>";
-		};
-		471975FE2C461326006A909F /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				471975FF2C461326006A909F /* RealityKitContent */,
-			);
-			path = Packages;
 			sourceTree = "<group>";
 		};
 		4719760A2C461327006A909F /* Preview Content */ = {
@@ -171,7 +164,6 @@
 			);
 			name = ProceduralPlanets;
 			packageProductDependencies = (
-				471976002C461326006A909F /* RealityKitContent */,
 			);
 			productName = ProceduralPlanets;
 			productReference = 471975FB2C461326006A909F /* ProceduralPlanets.app */;
@@ -215,6 +207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FC774E02E21BFD70029DDF8 /* Immersive.usda in Resources */,
 				4719760C2C461327006A909F /* Preview Assets.xcassets in Resources */,
 				471976092C461327006A909F /* Assets.xcassets in Resources */,
 			);
@@ -384,6 +377,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProceduralPlanets/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
@@ -391,13 +387,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "procedural-planets-reality-kit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				REGISTER_APP_GROUPS = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
@@ -411,6 +410,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProceduralPlanets/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
@@ -418,13 +420,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "procedural-planets.ProceduralPlanets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				REGISTER_APP_GROUPS = YES;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
@@ -451,13 +456,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		471976002C461326006A909F /* RealityKitContent */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RealityKitContent;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 471975F32C461326006A909F /* Project object */;
 }

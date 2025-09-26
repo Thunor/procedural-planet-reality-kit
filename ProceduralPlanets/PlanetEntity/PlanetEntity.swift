@@ -7,7 +7,6 @@
 
 import Foundation
 import RealityKit
-import RealityKitContent
 import Combine
 import SwiftUI
 import CoreImage
@@ -66,7 +65,7 @@ class PlanetEntity: Entity {
         
         var customMaterial = try! await ShaderGraphMaterial(named: "/Root/MyMaterial/MyMaterial",
                                                             from: "Immersive",
-                                                            in: realityKitContentBundle)
+                                                            in: nil)
         
         try! customMaterial.setParameter(name: "min", value: .float(elevationMin))
         try! customMaterial.setParameter(name: "max", value: .float(elevationMax))
