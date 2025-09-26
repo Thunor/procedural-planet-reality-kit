@@ -14,15 +14,24 @@ struct MeshSettingsView: View {
     @Binding var planetConfiguration: MeshConfiguration
     
     @State private var resolution: Float
+    @State private var radius: Float
     
     init(planetConfiguration: Binding<MeshConfiguration>) {
         _planetConfiguration = planetConfiguration
         
         self.resolution = Float(planetConfiguration.wrappedValue.resolution)
+        self.radius = planetConfiguration.wrappedValue.shapeSettings.radius
     }
     
     var body: some View {
         Form {
+            Section("Radius: \(String(format: "%.3f", radius))") {
+                Slider(value: $radius, in: 0.05...1.0, step: 0.001, onEditingChanged: { isEditing in
+                    if !isEditing {
+                        planetConfiguration.shapeSettings.radius = radius
+                    }
+                })
+            }
             Section("Resolution: \(Int(resolution))") {
                 Slider(value: $resolution, in: 2...200, step: 1.0, onEditingChanged: { isEditing in
                     if !isEditing {
