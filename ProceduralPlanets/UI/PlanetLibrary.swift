@@ -40,16 +40,24 @@ struct PlanetLibrary: View {
                     List(selection: $selectedPlanet) {
                         ForEach(planetModels) { planet in
                             HStack {
-                                Image(systemName: "globe")
-                                    .foregroundStyle(.blue)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(planet.name)
-                                        .font(.headline)
-                                    Text("Procedural Planet")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                HStack {
+                                    Image(systemName: "globe")
+                                        .foregroundStyle(.blue)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(planet.name)
+                                            .font(.headline)
+                                        Text("Procedural Planet")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    Spacer()
                                 }
-                                Spacer()
+                                .border(.background, width: 2.0)
+                                .onTapGesture {
+                                    debugPrint("need to show the planet on the right")
+                                    selectedPlanet = planet
+                                }
+                                Spacer(minLength: 6)
                                 Button("Edit") {
                                     let uuid = UUID()
                                     appState.planetModelMap[uuid] = planet
