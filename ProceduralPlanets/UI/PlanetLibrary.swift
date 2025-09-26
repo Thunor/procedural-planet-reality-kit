@@ -19,35 +19,99 @@ struct PlanetLibrary: View {
     @State var selectedPlanet: PlanetModel?
     
     var body: some View {
-        NavigationStack {
+        NavigationSplitView {
             VStack {
                 if planetModels.isEmpty {
-                    Text("Add your first planet!")
+                    VStack(spacing: 20) {
+                        Image(systemName: "globe")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                        Text("No Planets Yet")
+                            .font(.title2)
+                        Text("Create your first procedural planet to get started")
+                            .foregroundStyle(.secondary)
+                        Button("Add Planet") {
+                            addPlanet()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List(selection: $selectedPlanet) {
                         ForEach(planetModels) { planet in
-                            Button("\(planet.name)") {
-                                let uuid = UUID()
-                                appState.planetModelMap[uuid] = planet
-                                openWindow(value: uuid)
+                            HStack {
+                                Image(systemName: "globe")
+                                    .foregroundStyle(.blue)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(planet.name)
+                                        .font(.headline)
+                                    Text("Procedural Planet")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Button("Edit") {
+                                    let uuid = UUID()
+                                    appState.planetModelMap[uuid] = planet
+                                    openWindow(value: uuid)
+                                }
+                                .buttonStyle(.bordered)
+                                .controlSize(.small)
                             }
+                            .padding(.vertical, 2)
                         }
                         .onDelete(perform: deletePlanets)
                     }
                 }
             }
-            .padding()
+            .navigationTitle("Planet Library")
             .toolbar {
-                ToolbarItem(placement: .bottomOrnament) {
+                ToolbarItem(placement: .primaryAction) {
                     Button(action: {
                         addPlanet()
                     }) {
                         Label("Add Planet", systemImage: "plus")
                     }
-                    .labelStyle(.titleAndIcon)
                 }
             }
+        } detail: {
+            if let selectedPlanet {
+                VStack(spacing: 20) {
+                    Image(systemName: "globe")
+                        .font(.system(size: 60))
+                        .foregroundStyle(.blue)
+                    Text(selectedPlanet.name)
+                        .font(.largeTitle)
+                    Text("Procedural Planet")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                    
+                    Button("Open in Editor") {
+                        let uuid = UUID()
+                        appState.planetModelMap[uuid] = selectedPlanet
+                        openWindow(value: uuid)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(NSColor.controlBackgroundColor))
+            } else {
+                VStack(spacing: 20) {
+                    Image(systemName: "sidebar.left")
+                        .font(.largeTitle)
+                        .foregroundStyle(.tertiary)
+                    Text("Select a Planet")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
+                    Text("Choose a planet from the library to see details")
+                        .foregroundStyle(.tertiary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(NSColor.controlBackgroundColor))
+            }
         }
+        .frame(minWidth: 700, minHeight: 500)
     }
     
     private func addPlanet() {
@@ -65,12 +129,9 @@ struct PlanetLibrary: View {
 }
 
 #Preview {
-    VStack {
-        PlanetLibrary()
-    }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .glassBackgroundEffect()
-    .modelContainer(try! ModelContainer.sample())
+    PlanetLibrary()
+        .frame(width: 800, height: 600)
+        .modelContainer(try! ModelContainer.sample())
 }
 
 extension ModelContainer {

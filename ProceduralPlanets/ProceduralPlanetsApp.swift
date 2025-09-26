@@ -6,13 +6,10 @@
 //
 
 import SwiftUI
-//import RealityKitContent
 import SwiftData
 
 @main
 struct ProceduralPlanetsApp: App {
-    
-//    @Environment(\.physicalMetrics) var physicalMetrics
     
     @State var appState = AppState()
     
@@ -25,14 +22,24 @@ struct ProceduralPlanetsApp: App {
                 ])
                 .environment(appState)
         }
+        .commands {
+            CommandGroup(after: .newItem) {
+                Button("New Planet") {
+                    // This will be handled by the library view
+                }
+                .keyboardShortcut("n", modifiers: .command)
+            }
+        }
         
-        WindowGroup(for: UUID.self) { id in
+        WindowGroup("Planet Editor", for: UUID.self) { id in
             if let value = id.wrappedValue,
                 let planetModel = appState.planetModelMap[value] {
                 PlanetEditorView(planetModel: planetModel)
                     .environment(appState)
+                    .frame(minWidth: 800, minHeight: 600)
             }
-        }.windowStyle(.plain)
+        }
+        .defaultSize(width: 1000, height: 700)
     }
     
 }

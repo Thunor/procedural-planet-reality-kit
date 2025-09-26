@@ -12,8 +12,6 @@ import CoreGraphics
 
 struct EditorControlsView: View {
     
-//    @Environment(\.physicalMetrics) var physicalMetrics
-    
     var viewModel: PlanetEditorViewModel
     
     @State private var selectedTab = 0
@@ -83,8 +81,16 @@ class PlanetEditorViewModel {
             return nil
         }
         
-        UIGraphicsBeginImageContext(size)
-        guard let context = UIGraphicsGetCurrentContext() else {
+        // Use CGContext for macOS instead of UIGraphics
+        let bitmapInfo = CGBitmapInfo.byteOrder32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue
+        
+        guard let context = CGContext(data: nil,
+                                    width: Int(size.width),
+                                    height: Int(size.height),
+                                    bitsPerComponent: 8,
+                                    bytesPerRow: 0,
+                                    space: colorSpace,
+                                    bitmapInfo: bitmapInfo) else {
             return nil
         }
         
@@ -93,19 +99,12 @@ class PlanetEditorViewModel {
                                    end: CGPoint(x: size.width, y: 0),
                                    options: [])
         
-        guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
-            return nil
-        }
-        UIGraphicsEndImageContext()
-        
-        return image.cgImage
+        return context.makeImage()
     }
     
 }
 
 struct PlanetEditorView: View {
-    
-//    @Environment(\.physicalMetrics) var physicalMetrics
     
     @State var viewModel: PlanetEditorViewModel
     
@@ -114,28 +113,37 @@ struct PlanetEditorView: View {
     }
     
     var body: some View {
-        HStack {
-            NavigationStack {
-                HStack {
-                    EditorControlsView(viewModel: viewModel)
-                }
-                .navigationTitle(viewModel.planetName)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Save") {
-                            viewModel.save()
-                        }
-                    }
-                }
+        HSplitView {
+            // Controls sidebar
+            VStack {
+                EditorControlsView(viewModel: viewModel)
+                Spacer()
             }
-            PlanetView(viewModel: viewModel)
+            .frame(minWidth: 300, maxWidth: 400)
+            .background(Color(Color.gray))
+            
+            // 3D Planet view
+            VStack {
+                PlanetView(viewModel: viewModel)
+                    .frame(minWidth: 400, minHeight: 400)
+            }
+        }
+        .navigationTitle(viewModel.planetName)
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button("Save") {
+                    viewModel.save()
+                }
+                .keyboardShortcut("s", modifiers: .command)
+            }
         }
     }
                                                          
 }
 
-#Preview(windowStyle: .volumetric) {
+#Preview {
     PlanetEditorView(planetModel: .samplePlanet())
+        .frame(width: 1000, height: 700)
 }
 
 extension PlanetModel {
