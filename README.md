@@ -1,7 +1,7 @@
 # Procedural Planets in Reality Kit
 
 
-![screenshot](https://github.com/Thunor/procedural-planet-reality-kit/edit/main/README.md#:~:text=PlanetEditorView.png)
+![screenshot](PlanetEditorView.png)
 
 Requirements: VisionOS 2 and Xcode 16
 
