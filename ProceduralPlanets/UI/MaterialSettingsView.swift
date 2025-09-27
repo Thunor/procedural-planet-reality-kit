@@ -21,6 +21,16 @@ struct MaterialSettingsView: View {
                             ColorPicker("Color", selection: $point.color)
                             Slider(value: $point.position, in: 0...1)
                             Text(String(format: "%.2f", point.position))
+                            Button(action: {
+                                if let index = viewModel.textureConfiguration.gradientPoints.firstIndex(where: { $0.id == point.id }) {
+                                    deleteGradientPoint(at: IndexSet([index]))
+                                }
+                            }) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.borderless)
+                            .disabled(viewModel.textureConfiguration.gradientPoints.count <= 2) // Prevent deleting if only 2 points remain
                         }
                     }
                     .onDelete(perform: deleteGradientPoint)

@@ -124,8 +124,8 @@ struct PlanetLibrary: View {
     @ViewBuilder
     private func selectedPlanetView(_ planet: PlanetModel) -> some View {
         ZStack {
-            // 3D Planet view
-            PlanetView(viewModel: PlanetEditorViewModel(planetModel: planet))
+            // 3D Planet view with mouse wheel zoom
+            PlanetViewWithZoom(planet: planet)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipped()
             
@@ -182,7 +182,66 @@ struct PlanetLibrary: View {
         editingPlanet = nil
         editingName = ""
     }
+}
+
+// MARK: - Planet View with Mouse Wheel Zoom
+
+struct PlanetViewWithZoom: NSViewRepresentable {
+    let planet: PlanetModel
     
+    func makeNSView(context: Context) -> ZoomCapableHostingView {
+        let planetView = PlanetView(viewModel: PlanetEditorViewModel(planetModel: planet))
+        let hostingView = ZoomCapableHostingView(rootView: planetView)
+        return hostingView
+    }
+    
+    func updateNSView(_ nsView: ZoomCapableHostingView, context: Context) {
+        // Create a new PlanetView with the updated planet model
+        let newPlanetView = PlanetView(viewModel: PlanetEditorViewModel(planetModel: planet))
+        nsView.rootView = newPlanetView
+    }
+}
+
+class ZoomCapableHostingView: NSHostingView<PlanetView> {
+    private var currentZoom: CGFloat = 1.0
+    
+    override func scrollWheel(with event: NSEvent) {
+        // Only handle zoom if we're scrolling vertically
+        guard abs(event.scrollingDeltaY) > abs(event.scrollingDeltaX) else {
+            super.scrollWheel(with: event)
+            return
+        }
+        
+        let zoomSensitivity: CGFloat = 0.02
+        let zoomDelta = event.scrollingDeltaY * zoomSensitivity
+        let newZoom = currentZoom + zoomDelta
+        
+        // Clamp zoom between 0.5x and 3.0x
+        currentZoom = max(0.5, min(3.0, newZoom))
+        
+        // Apply zoom centered on the view
+        let centerX = bounds.midX
+        let centerY = bounds.midY
+        
+        var transform = CGAffineTransform.identity
+        transform = transform.translatedBy(x: centerX, y: centerY)
+        transform = transform.scaledBy(x: currentZoom, y: currentZoom)
+        transform = transform.translatedBy(x: -centerX, y: -centerY)
+        
+        layer?.setAffineTransform(transform)
+    }
+    
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
+    
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        return true
+    }
+    
+    override func becomeFirstResponder() -> Bool {
+        return true
+    }
 }
 
 // MARK: - Planet List Row View
@@ -242,9 +301,10 @@ struct PlanetListRowView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.background, lineWidth: 2.0)
         )
+        .contentShape(Rectangle())
         .onTapGesture {
             if editingPlanet != planet {
-                debugPrint("need to show the planet on the right")
+                debugPrint("Selecting planet: \(planet.name)")
                 selectedPlanet = planet
             }
         }
@@ -253,14 +313,14 @@ struct PlanetListRowView: View {
     @ViewBuilder
     private var actionButtonsSection: some View {
         HStack(spacing: 4) {
-            Button("Export") {
-                print("Export button clicked for planet: \(planet.name)")
-                exportingPlanet = planet
-                showingExportDialog = true
-                print("showingExportDialog set to: \(showingExportDialog)")
-            }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+//            Button("Export") {
+//                print("Export button clicked for planet: \(planet.name)")
+//                exportingPlanet = planet
+//                showingExportDialog = true
+//                print("showingExportDialog set to: \(showingExportDialog)")
+//            }
+//            .buttonStyle(.bordered)
+//            .controlSize(.small)
             
             Button("Edit") {
                 let uuid = UUID()

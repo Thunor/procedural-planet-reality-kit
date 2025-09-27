@@ -166,9 +166,21 @@ struct GradientPoint: Identifiable, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(position, forKey: .position)
         
-        guard let cgColor = color.cgColor else {
-            throw CodingError.wrongColor
+        // Try to get cgColor, if it fails, create a resolved CGColor in sRGB space
+        let cgColor: CGColor
+        if let directCGColor = color.cgColor {
+            cgColor = directCGColor
+        } else {
+            // Resolve the color by converting to sRGB color space
+            let resolvedColor = color.resolve(in: EnvironmentValues())
+            cgColor = CGColor(
+                srgbRed: CGFloat(resolvedColor.red),
+                green: CGFloat(resolvedColor.green),
+                blue: CGFloat(resolvedColor.blue),
+                alpha: CGFloat(resolvedColor.opacity)
+            )
         }
+        
         let codableColor = CodableColor(cgColor: cgColor)
         try container.encode(codableColor, forKey: .color)
     }
