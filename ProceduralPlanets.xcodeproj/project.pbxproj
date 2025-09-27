@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		471976032C461326006A909F /* ProceduralPlanetsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471976022C461326006A909F /* ProceduralPlanetsApp.swift */; };
-		471976092C461327006A909F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 471976082C461327006A909F /* Assets.xcassets */; };
 		4719760C2C461327006A909F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4719760B2C461327006A909F /* Preview Assets.xcassets */; };
 		471976312C468662006A909F /* TerrainFaceGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471976302C468662006A909F /* TerrainFaceGenerator.swift */; };
 		471976332C468676006A909F /* PlanetEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471976322C468676006A909F /* PlanetEntity.swift */; };
@@ -29,12 +28,12 @@
 		6F77F9DB2E874C7F00F7E17B /* CraterFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77F9DA2E874C7F00F7E17B /* CraterFilter.swift */; };
 		6F77F9DD2E874CA900F7E17B /* NoiseFilterAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77F9DC2E874CA900F7E17B /* NoiseFilterAI.swift */; };
 		6FC774E02E21BFD70029DDF8 /* Immersive.usda in Resources */ = {isa = PBXBuildFile; fileRef = 6FC774DF2E21BFD70029DDF8 /* Immersive.usda */; };
+		6FED4E7A2E8779BE00FA3B0A /* assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FED4E792E8779BE00FA3B0A /* assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		471975FB2C461326006A909F /* ProceduralPlanets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProceduralPlanets.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		471976022C461326006A909F /* ProceduralPlanetsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProceduralPlanetsApp.swift; sourceTree = "<group>"; };
-		471976082C461327006A909F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4719760B2C461327006A909F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4719760D2C461327006A909F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		471976302C468662006A909F /* TerrainFaceGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainFaceGenerator.swift; sourceTree = "<group>"; };
@@ -59,6 +58,7 @@
 		6F77F9DC2E874CA900F7E17B /* NoiseFilterAI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseFilterAI.swift; sourceTree = "<group>"; };
 		6FBD60AB2E86B029003C9634 /* MACOS_CONVERSION_NOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MACOS_CONVERSION_NOTES.md; sourceTree = "<group>"; };
 		6FC774DF2E21BFD70029DDF8 /* Immersive.usda */ = {isa = PBXFileReference; lastKnownFileType = text; path = Immersive.usda; sourceTree = "<group>"; };
+		6FED4E792E8779BE00FA3B0A /* assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,10 +97,10 @@
 				47F64E4D2C4DDC1900626B9D /* UI */,
 				47CD2C392C74B237005F9C80 /* PlanetEntity */,
 				47927A272C4E7CB700B42889 /* SimplexNoise */,
-				471976082C461327006A909F /* Assets.xcassets */,
 				6FC774DF2E21BFD70029DDF8 /* Immersive.usda */,
 				4719760D2C461327006A909F /* Info.plist */,
 				4719760A2C461327006A909F /* Preview Content */,
+				6FED4E792E8779BE00FA3B0A /* assets.xcassets */,
 			);
 			path = ProceduralPlanets;
 			sourceTree = "<group>";
@@ -215,7 +215,7 @@
 			files = (
 				6FC774E02E21BFD70029DDF8 /* Immersive.usda in Resources */,
 				4719760C2C461327006A909F /* Preview Assets.xcassets in Resources */,
-				471976092C461327006A909F /* Assets.xcassets in Resources */,
+				6FED4E7A2E8779BE00FA3B0A /* assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,7 +380,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProceduralPlanets/Preview Content\"";
@@ -401,6 +403,7 @@
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.role-playing-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -424,6 +427,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProceduralPlanets/Preview Content\"";
@@ -444,6 +448,7 @@
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.role-playing-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
