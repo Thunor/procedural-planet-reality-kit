@@ -398,7 +398,7 @@ extension PlanetModel {
             ),
             layerType: .craters
         )
-        planetTwo.meshConfiguration.shapeSettings.noiseLayers.append(craterLayer)
+        planetTwo.meshConfiguration?.shapeSettings.noiseLayers.append(craterLayer)
         
         modelContext.insert(planetOne)
         modelContext.insert(planetTwo)
@@ -432,12 +432,12 @@ struct KMZDocument: FileDocument {
     }
     
     private func generateKMLContent() -> String {
-        let radius = planet.meshConfiguration.shapeSettings.radius
-        let resolution = planet.meshConfiguration.resolution
-        let noiseLayerCount = planet.meshConfiguration.shapeSettings.noiseLayers.count
+        let radius = planet.meshConfiguration?.shapeSettings.radius
+        let resolution = planet.meshConfiguration?.resolution
+        let noiseLayerCount = planet.meshConfiguration?.shapeSettings.noiseLayers.count
         
         // Generate color information from texture configuration - properly escape XML
-        let colorInfo = planet.textureConfiguration.gradientPoints
+        let colorInfo = planet.textureConfiguration?.gradientPoints
             .map { "Color at \(String(format: "%.2f", $0.position)): \(xmlEscape($0.color.description))" }
             .joined(separator: ", ")
         
@@ -454,7 +454,7 @@ struct KMZDocument: FileDocument {
               
               Planet Properties:
               - Name: \(planet.name)
-              - Radius: \(String(format: "%.3f", radius))
+              - Radius: \(String(format: "%.3f", radius ?? 1.0))
               - Mesh Resolution: \(resolution)
               - Noise Layers: \(noiseLayerCount)
               
@@ -465,7 +465,7 @@ struct KMZDocument: FileDocument {
             ]]></description>
             <Placemark>
               <name>\(escapedPlanetName)</name>
-              <description><![CDATA[A procedural planet with radius \(String(format: "%.3f", radius)) and \(noiseLayerCount) noise layers]]></description>
+              <description><![CDATA[A procedural planet with radius \(String(format: "%.3f", radius ?? 1.0)) and \(noiseLayerCount) noise layers]]></description>
               <Point>
                 <coordinates>0,0,0</coordinates>
               </Point>

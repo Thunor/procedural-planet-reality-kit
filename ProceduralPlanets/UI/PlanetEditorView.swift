@@ -51,8 +51,8 @@ class PlanetEditorViewModel {
     
     init(planetModel: PlanetModel) {
         self.planetModel = planetModel
-        self.meshConfiguration = planetModel.meshConfiguration
-        self.textureConfiguration = planetModel.textureConfiguration
+        self.meshConfiguration = planetModel.meshConfiguration ?? MeshConfiguration(resolution: 50, shapeSettings: ShapeSettings(radius: 1.0, noiseLayers: []))
+        self.textureConfiguration = planetModel.textureConfiguration ?? TextureConfiguration(gradientPoints: [])
         self.planetName = planetModel.name
         self.textureImage = createProceduralPlanetTexture(size: .init(width: 200, height: 100))
     }
@@ -64,7 +64,12 @@ class PlanetEditorViewModel {
     }
     
     func createProceduralPlanetTexture(size: CGSize) -> CGImage? {
-        guard let cgImage = createMultiColorGradient(size: size, gradientPoints: textureConfiguration.gradientPoints) else {
+        let gradientPoints = textureConfiguration.gradientPoints
+        if gradientPoints.isEmpty {
+            return nil
+        }
+        
+        guard let cgImage = createMultiColorGradient(size: size, gradientPoints: gradientPoints) else {
             return nil
         }
     

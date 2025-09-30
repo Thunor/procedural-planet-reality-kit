@@ -18,23 +18,23 @@ class PlanetModel {
     
     // Store configurations as Data to avoid SIMD serialization issues
     @Attribute(.externalStorage)
-    private var meshConfigurationData: Data
+    private var meshConfigurationData: Data?
     
     @Attribute(.externalStorage)
-    private var textureConfigurationData: Data
+    private var textureConfigurationData: Data?
     
     @Attribute(.externalStorage)
     private var iceCapConfigurationData: Data?
     
     // Computed properties for easy access
-    var meshConfiguration: MeshConfiguration {
+    var meshConfiguration: MeshConfiguration? {
         get {
-            guard !meshConfigurationData.isEmpty else {
+            guard !(meshConfigurationData?.isEmpty ?? true) else {
                 // Return default configuration if data is empty
                 return MeshConfiguration(resolution: 50, shapeSettings: ShapeSettings(radius: 1.0, noiseLayers: []))
             }
             do {
-                return try JSONDecoder().decode(MeshConfiguration.self, from: meshConfigurationData)
+                return try JSONDecoder().decode(MeshConfiguration.self, from: meshConfigurationData ?? Data())
             } catch {
                 print("Failed to decode mesh configuration: \(error)")
                 return MeshConfiguration(resolution: 50, shapeSettings: ShapeSettings(radius: 1.0, noiseLayers: []))
@@ -49,14 +49,14 @@ class PlanetModel {
         }
     }
     
-    var textureConfiguration: TextureConfiguration {
+    var textureConfiguration: TextureConfiguration? {
         get {
-            guard !textureConfigurationData.isEmpty else {
+            guard !(textureConfigurationData?.isEmpty ?? true) else {
                 // Return default configuration if data is empty
                 return TextureConfiguration(gradientPoints: [])
             }
             do {
-                return try JSONDecoder().decode(TextureConfiguration.self, from: textureConfigurationData)
+                return try JSONDecoder().decode(TextureConfiguration.self, from: textureConfigurationData ?? Data())
             } catch {
                 print("Failed to decode texture configuration: \(error)")
                 return TextureConfiguration(gradientPoints: [])
@@ -458,7 +458,7 @@ struct IceCapConfiguration: Equatable, Codable {
         self.settings = settings
     }
     
-    init(from: Decodable) {
+    init(from decoder: Decoder) throws {
         self.enabled = false
         self.settings = .earthLike
     }

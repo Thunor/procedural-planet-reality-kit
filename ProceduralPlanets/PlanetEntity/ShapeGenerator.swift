@@ -59,23 +59,26 @@ struct ShapeGenerator {
         }
         
         // Process remaining layers
-        for i in 1..<shapeSettings.noiseLayers.count {
-            if shapeSettings.noiseLayers[i].enabled {
-                let mask = shapeSettings.noiseLayers[i].useFirstLayerAsMask ? firstLayerValue : 1
-                var layerValue: Float = 0
-                
-                switch shapeSettings.noiseLayers[i].layerType {
-                case .standard:
-                    if i < noiseFilters.count {
-                        layerValue = noiseFilters[i].evaluatePoint(pointOnUnitSphere)
+        if shapeSettings.noiseLayers.count >= 1 {
+            
+            for i in 1..<shapeSettings.noiseLayers.count {
+                if shapeSettings.noiseLayers[i].enabled {
+                    let mask = shapeSettings.noiseLayers[i].useFirstLayerAsMask ? firstLayerValue : 1
+                    var layerValue: Float = 0
+                    
+                    switch shapeSettings.noiseLayers[i].layerType {
+                        case .standard:
+                            if i < noiseFilters.count {
+                                layerValue = noiseFilters[i].evaluatePoint(pointOnUnitSphere)
+                            }
+                        case .craters:
+                            if i < craterFilters.count {
+                                layerValue = craterFilters[i].evaluatePoint(pointOnUnitSphere)
+                            }
                     }
-                case .craters:
-                    if i < craterFilters.count {
-                        layerValue = craterFilters[i].evaluatePoint(pointOnUnitSphere)
-                    }
+                    
+                    elevation += layerValue * mask
                 }
-                
-                elevation += layerValue * mask
             }
         }
         

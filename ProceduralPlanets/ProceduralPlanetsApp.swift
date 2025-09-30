@@ -36,6 +36,9 @@ struct ProceduralPlanetsApp: App {
             PlanetLibrary()
                 .modelContainer(sharedModelContainer)
                 .environment(appState)
+                .onAppear {
+                    loadSavedPlanetsIntoAppState()
+                }
         }
         .commands {
             CommandGroup(after: .newItem) {
@@ -58,4 +61,30 @@ struct ProceduralPlanetsApp: App {
         .defaultSize(width: 1000, height: 700)
     }
     
+    // Load saved planets into app state when the app starts
+    private func loadSavedPlanetsIntoAppState() {
+        Task { @MainActor in
+            // Get the model context from the container
+            let context = sharedModelContainer.mainContext
+            
+            // Create a descriptor to fetch all planet models
+            let descriptor = FetchDescriptor<PlanetModel>()
+            
+            do {
+                // Fetch all saved planets
+                let savedPlanets = try context.fetch(descriptor)
+                
+                // For each saved planet, create an entry in the app state map
+                for planet in savedPlanets {
+                    let uuid = UUID()
+                    appState.planetModelMap[uuid] = planet
+                    print("Loaded saved planet into app state: \(planet.name)")
+                }
+                
+                print("Loaded \(savedPlanets.count) planets into app state")
+            } catch {
+                print("Error loading planets into app state: \(error)")
+            }
+        }
+    }
 }
