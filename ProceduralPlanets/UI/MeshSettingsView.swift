@@ -24,13 +24,14 @@ struct MeshSettingsView: View {
     }
     
     var body: some View {
-        Form {
+        VStack {
             Section("Radius: \(String(format: "%.3f", radius))") {
                 Slider(value: $radius, in: 0.05...1.0, step: 0.001, onEditingChanged: { isEditing in
                     if !isEditing {
                         planetConfiguration.shapeSettings.radius = radius
                     }
                 })
+                .padding(.bottom, 20)
             }
             Section("Resolution: \(Int(resolution))") {
                 Slider(value: $resolution, in: 2...200, step: 1.0, onEditingChanged: { isEditing in
@@ -40,6 +41,7 @@ struct MeshSettingsView: View {
                         planetConfiguration = newConfig
                     }
                 })
+                .padding(.bottom, 20)
             }
             Section("Noise Layers") {
                 ForEach(planetConfiguration.shapeSettings.noiseLayers.indices, id: \.self) { index in
@@ -85,6 +87,7 @@ struct MeshSettingsView: View {
                     Label("Add Noise Layer", systemImage: "plus")
                 }
             }
+            Spacer()
         }
     }
     
@@ -103,5 +106,4 @@ struct MeshSettingsView: View {
         let newNoiseLayer = NoiseLayer(enabled: true, noiseSettings: settings)
         planetConfiguration.shapeSettings.noiseLayers.append(newNoiseLayer)
     }
-    
 }
