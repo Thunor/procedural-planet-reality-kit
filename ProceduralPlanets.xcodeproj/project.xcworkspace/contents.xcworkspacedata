@@ -4,4 +4,25 @@
    <FileRef
       location = "self:">
    </FileRef>
+   <FileRef
+      location = "group:IceCapSettings.swift">
+   </FileRef>
+   <FileRef
+      location = "group:IceCapMaterial.usda">
+   </FileRef>
+   <FileRef
+      location = "group:IceCapMaterial.swift">
+   </FileRef>
+   <FileRef
+      location = "group:IceCapDemoView.swift">
+   </FileRef>
+   <FileRef
+      location = "group:IceCapShaderDocumentation.md">
+   </FileRef>
+   <FileRef
+      location = "group:IceCapShaderTests.swift">
+   </FileRef>
+   <FileRef
+      location = "group:IceCapShaderREADME.md">
+   </FileRef>
 </Workspace>

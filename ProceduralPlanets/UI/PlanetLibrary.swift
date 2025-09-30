@@ -60,7 +60,10 @@ struct PlanetLibrary: View {
         .navigationTitle("Planet Library")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: addPlanet) {
+                Button(action: {
+                    print("Toolbar Add Planet button pressed")
+                    addPlanet()
+                }) {
                     Label("Add Planet", systemImage: "plus")
                 }
             }
@@ -78,6 +81,7 @@ struct PlanetLibrary: View {
             Text("Create your first procedural planet to get started")
                 .foregroundStyle(.secondary)
             Button("Add Planet") {
+                print("Empty state Add Planet button pressed")
                 addPlanet()
             }
             .buttonStyle(.borderedProminent)
@@ -158,9 +162,18 @@ struct PlanetLibrary: View {
     }
     
     private func addPlanet() {
+        print("Creating new planet...")
+        print("Current planet count: \(planetModels.count)")
+        
         let newPlanet = PlanetModel.samplePlanet()
         newPlanet.name = "Planet \(planetModels.count + 1)"
+        print("Planet created with name: \(newPlanet.name)")
+        
         modelContext.insert(newPlanet)
+        print("Planet inserted into model context")
+        
+        selectedPlanet = newPlanet
+        print("New planet selected: \(newPlanet.name)")
     }
     
     private func deletePlanets(at offsets: IndexSet) {

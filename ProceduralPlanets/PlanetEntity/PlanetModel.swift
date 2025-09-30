@@ -15,13 +15,106 @@ import CoreImage
 class PlanetModel {
 
     var name: String
-    var meshConfiguration: MeshConfiguration
-    var textureConfiguration: TextureConfiguration
     
-    init(name: String, meshConfiguration: MeshConfiguration, textureConfiguration: TextureConfiguration) {
-        self.meshConfiguration = meshConfiguration
-        self.textureConfiguration = textureConfiguration
+    // Store configurations as Data to avoid SIMD serialization issues
+    @Attribute(.externalStorage)
+    private var meshConfigurationData: Data
+    
+    @Attribute(.externalStorage)
+    private var textureConfigurationData: Data
+    
+    @Attribute(.externalStorage)
+    private var iceCapConfigurationData: Data?
+    
+    // Computed properties for easy access
+    var meshConfiguration: MeshConfiguration {
+        get {
+            guard !meshConfigurationData.isEmpty else {
+                // Return default configuration if data is empty
+                return MeshConfiguration(resolution: 50, shapeSettings: ShapeSettings(radius: 1.0, noiseLayers: []))
+            }
+            do {
+                return try JSONDecoder().decode(MeshConfiguration.self, from: meshConfigurationData)
+            } catch {
+                print("Failed to decode mesh configuration: \(error)")
+                return MeshConfiguration(resolution: 50, shapeSettings: ShapeSettings(radius: 1.0, noiseLayers: []))
+            }
+        }
+        set {
+            do {
+                meshConfigurationData = try JSONEncoder().encode(newValue)
+            } catch {
+                print("Failed to encode mesh configuration: \(error)")
+            }
+        }
+    }
+    
+    var textureConfiguration: TextureConfiguration {
+        get {
+            guard !textureConfigurationData.isEmpty else {
+                // Return default configuration if data is empty
+                return TextureConfiguration(gradientPoints: [])
+            }
+            do {
+                return try JSONDecoder().decode(TextureConfiguration.self, from: textureConfigurationData)
+            } catch {
+                print("Failed to decode texture configuration: \(error)")
+                return TextureConfiguration(gradientPoints: [])
+            }
+        }
+        set {
+            do {
+                textureConfigurationData = try JSONEncoder().encode(newValue)
+            } catch {
+                print("Failed to encode texture configuration: \(error)")
+            }
+        }
+    }
+    
+    var iceCapConfiguration: IceCapConfiguration? {
+        get {
+            guard let data = iceCapConfigurationData else { return nil }
+            do {
+                return try JSONDecoder().decode(IceCapConfiguration.self, from: data)
+            } catch {
+                print("Failed to decode ice cap configuration: \(error)")
+                return nil
+            }
+        }
+        set {
+            if let configuration = newValue {
+                do {
+                    iceCapConfigurationData = try JSONEncoder().encode(configuration)
+                } catch {
+                    print("Failed to encode ice cap configuration: \(error)")
+                    iceCapConfigurationData = nil
+                }
+            } else {
+                iceCapConfigurationData = nil
+            }
+        }
+    }
+    
+    init(name: String, meshConfiguration: MeshConfiguration, textureConfiguration: TextureConfiguration, iceCapConfiguration: IceCapConfiguration? = nil) {
         self.name = name
+        
+        // Initialize data properties with encoded configurations
+        do {
+            self.meshConfigurationData = try JSONEncoder().encode(meshConfiguration)
+            self.textureConfigurationData = try JSONEncoder().encode(textureConfiguration)
+            
+            if let iceCapConfig = iceCapConfiguration {
+                self.iceCapConfigurationData = try JSONEncoder().encode(iceCapConfig)
+            } else {
+                self.iceCapConfigurationData = nil
+            }
+        } catch {
+            print("Failed to encode configurations during initialization: \(error)")
+            // Fallback to empty data - will use default values when accessed
+            self.meshConfigurationData = Data()
+            self.textureConfigurationData = Data()
+            self.iceCapConfigurationData = nil
+        }
     }
     
 }
@@ -105,6 +198,57 @@ struct NoiseSettings: Equatable, Hashable, Codable {
     var roughness: Float
     var center: SIMD3<Float>
     var minValue: Float
+    
+    enum CodingKeys: String, CodingKey {
+        case numberOfLayers
+        case persistance
+        case baseRoughness
+        case strength
+        case roughness
+        case center
+        case minValue
+    }
+    
+    init(numberOfLayers: Int, persistance: Float, baseRoughness: Float, strength: Float, roughness: Float, center: SIMD3<Float>, minValue: Float) {
+        self.numberOfLayers = numberOfLayers
+        self.persistance = persistance
+        self.baseRoughness = baseRoughness
+        self.strength = strength
+        self.roughness = roughness
+        self.center = center
+        self.minValue = minValue
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        numberOfLayers = try container.decode(Int.self, forKey: .numberOfLayers)
+        persistance = try container.decode(Float.self, forKey: .persistance)
+        baseRoughness = try container.decode(Float.self, forKey: .baseRoughness)
+        strength = try container.decode(Float.self, forKey: .strength)
+        roughness = try container.decode(Float.self, forKey: .roughness)
+        minValue = try container.decode(Float.self, forKey: .minValue)
+        
+        // Decode SIMD3<Float> as array
+        let centerArray = try container.decode([Float].self, forKey: .center)
+        if centerArray.count == 3 {
+            center = SIMD3<Float>(centerArray[0], centerArray[1], centerArray[2])
+        } else {
+            center = SIMD3<Float>(0, 0, 0)
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(numberOfLayers, forKey: .numberOfLayers)
+        try container.encode(persistance, forKey: .persistance)
+        try container.encode(baseRoughness, forKey: .baseRoughness)
+        try container.encode(strength, forKey: .strength)
+        try container.encode(roughness, forKey: .roughness)
+        try container.encode(minValue, forKey: .minValue)
+        
+        // Encode SIMD3<Float> as array
+        try container.encode([center.x, center.y, center.z], forKey: .center)
+    }
 }
 
 struct CraterSettings: Equatable, Hashable, Codable {
@@ -288,10 +432,47 @@ extension PlanetModel {
             ]
         )
         
+        let iceCapConfiguration = IceCapConfiguration(
+            enabled: true,
+            settings: .earthLike
+        )
+        
         return PlanetModel(
             name: "Sample Planet",
             meshConfiguration: meshConfiguration,
-            textureConfiguration: textureConfiguration
+            textureConfiguration: textureConfiguration,
+            iceCapConfiguration: iceCapConfiguration
         )
     }
+}
+
+// MARK: - Ice Cap Configuration
+
+struct IceCapConfiguration: Equatable, Codable {
+    
+    var enabled: Bool
+    var settings: IceCapSettings
+    
+    init(enabled: Bool = false, settings: IceCapSettings = .earthLike) {
+        self.enabled = enabled
+        self.settings = settings
+    }
+    
+    init(from: Decodable) {
+        self.enabled = false
+        self.settings = .earthLike
+    }
+    
+    /// Default configuration with ice caps disabled
+    static let disabled = IceCapConfiguration(enabled: false)
+    
+    /// Earth-like ice cap configuration
+    static let earthLike = IceCapConfiguration(enabled: true, settings: .earthLike)
+    
+    /// Icy world configuration
+    static let icyWorld = IceCapConfiguration(enabled: true, settings: .icyWorld)
+    
+    /// Desert world configuration (minimal ice)
+    static let desert = IceCapConfiguration(enabled: true, settings: .desert)
+    
 }

@@ -25,6 +25,13 @@
 		47CD2C342C7028AD005F9C80 /* PlanetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */; };
 		47CD2C382C72F456005F9C80 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C372C72F456005F9C80 /* AppModel.swift */; };
 		47CD2C3B2C74B2CC005F9C80 /* ShapeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CD2C3A2C74B2CB005F9C80 /* ShapeGenerator.swift */; };
+		6F17C39F2E89A244004E1C68 /* IceCapShaderREADME.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F17C39E2E89A244004E1C68 /* IceCapShaderREADME.md */; };
+		6F17C3A02E89A244004E1C68 /* IceCapMaterial.usda in Resources */ = {isa = PBXBuildFile; fileRef = 6F17C3992E89A244004E1C68 /* IceCapMaterial.usda */; };
+		6F17C3A12E89A244004E1C68 /* IceCapShaderDocumentation.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F17C39C2E89A244004E1C68 /* IceCapShaderDocumentation.md */; };
+		6F17C3A22E89A244004E1C68 /* IceCapShaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17C39D2E89A244004E1C68 /* IceCapShaderTests.swift */; };
+		6F17C3A32E89A244004E1C68 /* IceCapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17C3982E89A244004E1C68 /* IceCapSettings.swift */; };
+		6F17C3A42E89A244004E1C68 /* IceCapDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17C39B2E89A244004E1C68 /* IceCapDemoView.swift */; };
+		6F17C3A52E89A244004E1C68 /* IceCapMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F17C39A2E89A244004E1C68 /* IceCapMaterial.swift */; };
 		6F77F9DB2E874C7F00F7E17B /* CraterFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77F9DA2E874C7F00F7E17B /* CraterFilter.swift */; };
 		6F77F9DD2E874CA900F7E17B /* NoiseFilterAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F77F9DC2E874CA900F7E17B /* NoiseFilterAI.swift */; };
 		6FC774E02E21BFD70029DDF8 /* Immersive.usda in Resources */ = {isa = PBXBuildFile; fileRef = 6FC774DF2E21BFD70029DDF8 /* Immersive.usda */; };
@@ -54,6 +61,13 @@
 		47CD2C332C7028AD005F9C80 /* PlanetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetLibrary.swift; sourceTree = "<group>"; };
 		47CD2C372C72F456005F9C80 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		47CD2C3A2C74B2CB005F9C80 /* ShapeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeGenerator.swift; sourceTree = "<group>"; };
+		6F17C3982E89A244004E1C68 /* IceCapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IceCapSettings.swift; sourceTree = "<group>"; };
+		6F17C3992E89A244004E1C68 /* IceCapMaterial.usda */ = {isa = PBXFileReference; lastKnownFileType = text; path = IceCapMaterial.usda; sourceTree = "<group>"; };
+		6F17C39A2E89A244004E1C68 /* IceCapMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IceCapMaterial.swift; sourceTree = "<group>"; };
+		6F17C39B2E89A244004E1C68 /* IceCapDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IceCapDemoView.swift; sourceTree = "<group>"; };
+		6F17C39C2E89A244004E1C68 /* IceCapShaderDocumentation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = IceCapShaderDocumentation.md; sourceTree = "<group>"; };
+		6F17C39D2E89A244004E1C68 /* IceCapShaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IceCapShaderTests.swift; sourceTree = "<group>"; };
+		6F17C39E2E89A244004E1C68 /* IceCapShaderREADME.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = IceCapShaderREADME.md; sourceTree = "<group>"; };
 		6F77F9DA2E874C7F00F7E17B /* CraterFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraterFilter.swift; sourceTree = "<group>"; };
 		6F77F9DC2E874CA900F7E17B /* NoiseFilterAI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseFilterAI.swift; sourceTree = "<group>"; };
 		6FBD60AB2E86B029003C9634 /* MACOS_CONVERSION_NOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MACOS_CONVERSION_NOTES.md; sourceTree = "<group>"; };
@@ -92,6 +106,7 @@
 		471975FD2C461326006A909F /* ProceduralPlanets */ = {
 			isa = PBXGroup;
 			children = (
+				6F17C3972E89A22A004E1C68 /* IceCaps */,
 				47CD2C372C72F456005F9C80 /* AppModel.swift */,
 				471976022C461326006A909F /* ProceduralPlanetsApp.swift */,
 				47F64E4D2C4DDC1900626B9D /* UI */,
@@ -151,6 +166,20 @@
 				6F77F9DC2E874CA900F7E17B /* NoiseFilterAI.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		6F17C3972E89A22A004E1C68 /* IceCaps */ = {
+			isa = PBXGroup;
+			children = (
+				6F17C3982E89A244004E1C68 /* IceCapSettings.swift */,
+				6F17C3992E89A244004E1C68 /* IceCapMaterial.usda */,
+				6F17C39A2E89A244004E1C68 /* IceCapMaterial.swift */,
+				6F17C39B2E89A244004E1C68 /* IceCapDemoView.swift */,
+				6F17C39C2E89A244004E1C68 /* IceCapShaderDocumentation.md */,
+				6F17C39D2E89A244004E1C68 /* IceCapShaderTests.swift */,
+				6F17C39E2E89A244004E1C68 /* IceCapShaderREADME.md */,
+			);
+			path = IceCaps;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,6 +243,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FC774E02E21BFD70029DDF8 /* Immersive.usda in Resources */,
+				6F17C39F2E89A244004E1C68 /* IceCapShaderREADME.md in Resources */,
+				6F17C3A02E89A244004E1C68 /* IceCapMaterial.usda in Resources */,
+				6F17C3A12E89A244004E1C68 /* IceCapShaderDocumentation.md in Resources */,
 				4719760C2C461327006A909F /* Preview Assets.xcassets in Resources */,
 				6FED4E7A2E8779BE00FA3B0A /* assets.xcassets in Resources */,
 			);
@@ -227,6 +259,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				47CD2C342C7028AD005F9C80 /* PlanetLibrary.swift in Sources */,
+				6F17C3A22E89A244004E1C68 /* IceCapShaderTests.swift in Sources */,
+				6F17C3A32E89A244004E1C68 /* IceCapSettings.swift in Sources */,
+				6F17C3A42E89A244004E1C68 /* IceCapDemoView.swift in Sources */,
+				6F17C3A52E89A244004E1C68 /* IceCapMaterial.swift in Sources */,
 				472223212C659E33009B9668 /* MinMax.swift in Sources */,
 				4722231F2C624600009B9668 /* PlanetEditorView.swift in Sources */,
 				47CD2C322C6E23AB005F9C80 /* PlanetModel.swift in Sources */,
@@ -386,7 +422,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProceduralPlanets/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 27UHAFC56C;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
@@ -431,7 +467,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProceduralPlanets/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 27UHAFC56C;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;

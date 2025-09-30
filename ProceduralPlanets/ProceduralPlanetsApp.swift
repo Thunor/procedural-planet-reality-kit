@@ -13,13 +13,28 @@ struct ProceduralPlanetsApp: App {
     
     @State var appState = AppState()
     
+    var sharedModelContainer: ModelContainer = {
+        do {
+            // Try the simplest possible configuration first
+            return try ModelContainer(for: PlanetModel.self)
+        } catch {
+            print("Failed to create ModelContainer with PlanetModel: \(error)")
+            
+            // Fallback to in-memory container for debugging
+            do {
+                let schema = Schema([PlanetModel.self])
+                let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+                return try ModelContainer(for: schema, configurations: [configuration])
+            } catch {
+                fatalError("Could not create fallback ModelContainer: \(error)")
+            }
+        }
+    }()
+    
     var body: some Scene {
-        
         WindowGroup {
             PlanetLibrary()
-                .modelContainer(for: [
-                    PlanetModel.self
-                ])
+                .modelContainer(sharedModelContainer)
                 .environment(appState)
         }
         .commands {
@@ -35,6 +50,7 @@ struct ProceduralPlanetsApp: App {
             if let value = id.wrappedValue,
                 let planetModel = appState.planetModelMap[value] {
                 PlanetEditorView(planetModel: planetModel)
+                    .modelContainer(sharedModelContainer)
                     .environment(appState)
                     .frame(minWidth: 800, minHeight: 600)
             }

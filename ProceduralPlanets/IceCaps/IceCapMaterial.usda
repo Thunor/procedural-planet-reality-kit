@@ -1,0 +1,481 @@
+#usda 1.0
+(
+    defaultPrim = "IceCapMaterial"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Material "IceCapMaterial"
+{
+    # Input parameters for ice cap configuration
+    float inputs:northCapThreshold = 0.7 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, 200)
+                int stackingOrderInSubgraph = 1
+            }
+        }
+    )
+    
+    float inputs:southCapThreshold = -0.7 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, 150)
+                int stackingOrderInSubgraph = 2
+            }
+        }
+    )
+    
+    float inputs:falloffSharpness = 2.0 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, 100)
+                int stackingOrderInSubgraph = 3
+            }
+        }
+    )
+    
+    float inputs:minElevation = 0.0 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, 50)
+                int stackingOrderInSubgraph = 4
+            }
+        }
+    )
+    
+    float inputs:maxElevation = 1.0 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, 0)
+                int stackingOrderInSubgraph = 5
+            }
+        }
+    )
+    
+    float inputs:globalTemperature = 0.0 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -50)
+                int stackingOrderInSubgraph = 6
+            }
+        }
+    )
+    
+    color3f inputs:iceColor = (0.9, 0.95, 1.0) (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -100)
+                int stackingOrderInSubgraph = 7
+            }
+        }
+    )
+    
+    float inputs:iceRoughness = 0.15 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -150)
+                int stackingOrderInSubgraph = 8
+            }
+        }
+    )
+    
+    float inputs:iceMetallic = 0.05 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -200)
+                int stackingOrderInSubgraph = 9
+            }
+        }
+    )
+    
+    float inputs:noiseScale = 8.0 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -250)
+                int stackingOrderInSubgraph = 10
+            }
+        }
+    )
+    
+    float inputs:noiseStrength = 0.2 (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -300)
+                int stackingOrderInSubgraph = 11
+            }
+        }
+    )
+    
+    asset inputs:baseTexture (
+        customData = {
+            dictionary realitykit = {
+                float2 positionInSubgraph = (-800, -350)
+                int stackingOrderInSubgraph = 12
+            }
+        }
+    )
+    
+    token outputs:mtlx:surface.connect = </IceCapMaterial/PreviewSurface.outputs:out>
+    token outputs:realitykit:vertex
+    float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (600, 0)
+
+    # Main surface shader
+    def Shader "PreviewSurface"
+    {
+        uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+        color3f inputs:diffuseColor.connect = </IceCapMaterial/FinalColor.outputs:out>
+        float inputs:metallic.connect = </IceCapMaterial/FinalMetallic.outputs:out>
+        float inputs:roughness.connect = </IceCapMaterial/FinalRoughness.outputs:out>
+        color3f inputs:emissiveColor = (0, 0, 0)
+        float inputs:opacity = 1
+        token outputs:out
+        float2 ui:nodegraph:node:pos = (400, 0)
+        int ui:nodegraph:node:stackingOrder = 100
+    }
+
+    # World position input
+    def Shader "WorldPosition"
+    {
+        uniform token info:id = "ND_position_vector3"
+        string inputs:space = "world"
+        float3 outputs:out
+        float2 ui:nodegraph:node:pos = (-600, 300)
+        int ui:nodegraph:node:stackingOrder = 20
+    }
+
+    # Calculate latitude from world position
+    def NodeGraph "LatitudeCalculation"
+    {
+        float3 inputs:worldPos.connect = </IceCapMaterial/WorldPosition.outputs:out>
+        float outputs:latitude
+        float2 ui:nodegraph:node:pos = (-450, 300)
+        int ui:nodegraph:node:stackingOrder = 25
+        
+        # Normalize the world position
+        def Shader "Normalize"
+        {
+            uniform token info:id = "ND_normalize_vector3"
+            float3 inputs:in.connect = </IceCapMaterial/LatitudeCalculation.inputs:worldPos>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-300, 320)
+            int ui:nodegraph:node:stackingOrder = 26
+        }
+        
+        # Extract Y component (latitude)
+        def Shader "ExtractY"
+        {
+            uniform token info:id = "ND_extract_vector3"
+            float3 inputs:in.connect = </IceCapMaterial/LatitudeCalculation/Normalize.outputs:out>
+            int inputs:index = 1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-150, 320)
+            int ui:nodegraph:node:stackingOrder = 27
+        }
+        
+        float outputs:latitude.connect = </IceCapMaterial/LatitudeCalculation/ExtractY.outputs:out>
+    }
+
+    # Calculate northern ice cap coverage
+    def NodeGraph "NorthIceCap"
+    {
+        float inputs:latitude.connect = </IceCapMaterial/LatitudeCalculation.outputs:latitude>
+        float inputs:threshold.connect = </IceCapMaterial.inputs:northCapThreshold>
+        float inputs:sharpness.connect = </IceCapMaterial.inputs:falloffSharpness>
+        float outputs:coverage
+        float2 ui:nodegraph:node:pos = (-300, 200)
+        int ui:nodegraph:node:stackingOrder = 30
+        
+        # Check if above threshold
+        def Shader "AboveThreshold"
+        {
+            uniform token info:id = "ND_subtract_float"
+            float inputs:in1.connect = </IceCapMaterial/NorthIceCap.inputs:latitude>
+            float inputs:in2.connect = </IceCapMaterial/NorthIceCap.inputs:threshold>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-200, 220)
+            int ui:nodegraph:node:stackingOrder = 31
+        }
+        
+        # Normalize to 0-1 range
+        def Shader "NormalizeRange"
+        {
+            uniform token info:id = "ND_divide_float"
+            float inputs:in1.connect = </IceCapMaterial/NorthIceCap/AboveThreshold.outputs:out>
+            float inputs:in2 = 0.3  # (1.0 - threshold) approximation
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-50, 220)
+            int ui:nodegraph:node:stackingOrder = 32
+        }
+        
+        # Apply falloff
+        def Shader "ApplyFalloff"
+        {
+            uniform token info:id = "ND_power_float"
+            float inputs:in1.connect = </IceCapMaterial/NorthIceCap/NormalizeRange.outputs:out>
+            float inputs:in2.connect = </IceCapMaterial/NorthIceCap.inputs:sharpness>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (100, 220)
+            int ui:nodegraph:node:stackingOrder = 33
+        }
+        
+        # Clamp to valid range
+        def Shader "ClampCoverage"
+        {
+            uniform token info:id = "ND_clamp_float"
+            float inputs:in.connect = </IceCapMaterial/NorthIceCap/ApplyFalloff.outputs:out>
+            float inputs:low = 0
+            float inputs:high = 1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (250, 220)
+            int ui:nodegraph:node:stackingOrder = 34
+        }
+        
+        float outputs:coverage.connect = </IceCapMaterial/NorthIceCap/ClampCoverage.outputs:out>
+    }
+
+    # Calculate southern ice cap coverage
+    def NodeGraph "SouthIceCap"
+    {
+        float inputs:latitude.connect = </IceCapMaterial/LatitudeCalculation.outputs:latitude>
+        float inputs:threshold.connect = </IceCapMaterial.inputs:southCapThreshold>
+        float inputs:sharpness.connect = </IceCapMaterial.inputs:falloffSharpness>
+        float outputs:coverage
+        float2 ui:nodegraph:node:pos = (-300, 50)
+        int ui:nodegraph:node:stackingOrder = 40
+        
+        # Check if below threshold
+        def Shader "BelowThreshold"
+        {
+            uniform token info:id = "ND_subtract_float"
+            float inputs:in1.connect = </IceCapMaterial/SouthIceCap.inputs:threshold>
+            float inputs:in2.connect = </IceCapMaterial/SouthIceCap.inputs:latitude>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-200, 70)
+            int ui:nodegraph:node:stackingOrder = 41
+        }
+        
+        # Normalize to 0-1 range
+        def Shader "NormalizeRange"
+        {
+            uniform token info:id = "ND_divide_float"
+            float inputs:in1.connect = </IceCapMaterial/SouthIceCap/BelowThreshold.outputs:out>
+            float inputs:in2 = 1.7  # (1.0 + threshold) approximation
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-50, 70)
+            int ui:nodegraph:node:stackingOrder = 42
+        }
+        
+        # Apply falloff
+        def Shader "ApplyFalloff"
+        {
+            uniform token info:id = "ND_power_float"
+            float inputs:in1.connect = </IceCapMaterial/SouthIceCap/NormalizeRange.outputs:out>
+            float inputs:in2.connect = </IceCapMaterial/SouthIceCap.inputs:sharpness>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (100, 70)
+            int ui:nodegraph:node:stackingOrder = 43
+        }
+        
+        # Clamp to valid range
+        def Shader "ClampCoverage"
+        {
+            uniform token info:id = "ND_clamp_float"
+            float inputs:in.connect = </IceCapMaterial/SouthIceCap/ApplyFalloff.outputs:out>
+            float inputs:low = 0
+            float inputs:high = 1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (250, 70)
+            int ui:nodegraph:node:stackingOrder = 44
+        }
+        
+        float outputs:coverage.connect = </IceCapMaterial/SouthIceCap/ClampCoverage.outputs:out>
+    }
+
+    # Combine north and south ice coverage
+    def Shader "CombineIceCoverage"
+    {
+        uniform token info:id = "ND_max_float"
+        float inputs:in1.connect = </IceCapMaterial/NorthIceCap.outputs:coverage>
+        float inputs:in2.connect = </IceCapMaterial/SouthIceCap.outputs:coverage>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (-100, 125)
+        int ui:nodegraph:node:stackingOrder = 50
+    }
+
+    # Elevation-based masking
+    def NodeGraph "ElevationMask"
+    {
+        float inputs:elevation
+        float inputs:minElev.connect = </IceCapMaterial.inputs:minElevation>
+        float inputs:maxElev.connect = </IceCapMaterial.inputs:maxElevation>
+        float outputs:mask
+        float2 ui:nodegraph:node:pos = (-100, -100)
+        int ui:nodegraph:node:stackingOrder = 55
+        
+        # Smoothstep for elevation masking
+        def Shader "ElevationSmoothstep"
+        {
+            uniform token info:id = "ND_smoothstep_float"
+            float inputs:low.connect = </IceCapMaterial/ElevationMask.inputs:minElev>
+            float inputs:high.connect = </IceCapMaterial/ElevationMask.inputs:maxElev>
+            float inputs:in.connect = </IceCapMaterial/ElevationMask.inputs:elevation>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (50, -80)
+            int ui:nodegraph:node:stackingOrder = 56
+        }
+        
+        float outputs:mask.connect = </IceCapMaterial/ElevationMask/ElevationSmoothstep.outputs:out>
+    }
+
+    # Apply elevation mask to ice coverage
+    def Shader "ApplyElevationMask"
+    {
+        uniform token info:id = "ND_multiply_float"
+        float inputs:in1.connect = </IceCapMaterial/CombineIceCoverage.outputs:out>
+        float inputs:in2.connect = </IceCapMaterial/ElevationMask.outputs:mask>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (50, 50)
+        int ui:nodegraph:node:stackingOrder = 60
+    }
+
+    # Noise generation for ice variation
+    def NodeGraph "IceNoise"
+    {
+        float3 inputs:worldPos.connect = </IceCapMaterial/WorldPosition.outputs:out>
+        float inputs:scale.connect = </IceCapMaterial.inputs:noiseScale>
+        float inputs:strength.connect = </IceCapMaterial.inputs:noiseStrength>
+        float outputs:variation
+        float2 ui:nodegraph:node:pos = (-100, -250)
+        int ui:nodegraph:node:stackingOrder = 65
+        
+        # Scale world position
+        def Shader "ScalePosition"
+        {
+            uniform token info:id = "ND_multiply_vector3"
+            float3 inputs:in1.connect = </IceCapMaterial/IceNoise.inputs:worldPos>
+            float3 inputs:in2.connect = </IceCapMaterial/IceNoise.inputs:scale>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-50, -230)
+            int ui:nodegraph:node:stackingOrder = 66
+        }
+        
+        # Simple noise approximation using fractal
+        def Shader "FractalNoise"
+        {
+            uniform token info:id = "ND_fractal3d_float"
+            float3 inputs:position.connect = </IceCapMaterial/IceNoise/ScalePosition.outputs:out>
+            int inputs:octaves = 3
+            float inputs:lacunarity = 2
+            float inputs:diminish = 0.5
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (100, -230)
+            int ui:nodegraph:node:stackingOrder = 67
+        }
+        
+        # Apply noise strength
+        def Shader "ApplyNoiseStrength"
+        {
+            uniform token info:id = "ND_multiply_float"
+            float inputs:in1.connect = </IceCapMaterial/IceNoise/FractalNoise.outputs:out>
+            float inputs:in2.connect = </IceCapMaterial/IceNoise.inputs:strength>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (250, -230)
+            int ui:nodegraph:node:stackingOrder = 68
+        }
+        
+        # Add 1.0 to center noise around 1.0
+        def Shader "CenterNoise"
+        {
+            uniform token info:id = "ND_add_float"
+            float inputs:in1.connect = </IceCapMaterial/IceNoise/ApplyNoiseStrength.outputs:out>
+            float inputs:in2 = 1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (400, -230)
+            int ui:nodegraph:node:stackingOrder = 69
+        }
+        
+        float outputs:variation.connect = </IceCapMaterial/IceNoise/CenterNoise.outputs:out>
+    }
+
+    # Apply noise variation to ice coverage
+    def Shader "ApplyNoiseVariation"
+    {
+        uniform token info:id = "ND_multiply_float"
+        float inputs:in1.connect = </IceCapMaterial/ApplyElevationMask.outputs:out>
+        float inputs:in2.connect = </IceCapMaterial/IceNoise.outputs:variation>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (200, 25)
+        int ui:nodegraph:node:stackingOrder = 70
+    }
+
+    # Temperature modulation
+    def Shader "TemperatureEffect"
+    {
+        uniform token info:id = "ND_subtract_float"
+        float inputs:in1 = 1
+        float inputs:in2.connect = </IceCapMaterial.inputs:globalTemperature>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (50, -50)
+        int ui:nodegraph:node:stackingOrder = 75
+    }
+
+    # Apply temperature to final ice coverage
+    def Shader "FinalIceCoverage"
+    {
+        uniform token info:id = "ND_multiply_float"
+        float inputs:in1.connect = </IceCapMaterial/ApplyNoiseVariation.outputs:out>
+        float inputs:in2.connect = </IceCapMaterial/TemperatureEffect.outputs:out>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (350, 0)
+        int ui:nodegraph:node:stackingOrder = 80
+    }
+
+    # Base texture sampling (if provided)
+    def Shader "BaseTextureSample"
+    {
+        uniform token info:id = "ND_image_color3"
+        asset inputs:file.connect = </IceCapMaterial.inputs:baseTexture>
+        float2 inputs:texcoord
+        color3f inputs:default = (0.5, 0.3, 0.2)
+        color3f outputs:out
+        float2 ui:nodegraph:node:pos = (-200, -400)
+        int ui:nodegraph:node:stackingOrder = 85
+    }
+
+    # Mix base texture with ice color
+    def Shader "FinalColor"
+    {
+        uniform token info:id = "ND_mix_color3"
+        color3f inputs:fg.connect = </IceCapMaterial.inputs:iceColor>
+        color3f inputs:bg.connect = </IceCapMaterial/BaseTextureSample.outputs:out>
+        float inputs:mix.connect = </IceCapMaterial/FinalIceCoverage.outputs:out>
+        color3f outputs:out
+        float2 ui:nodegraph:node:pos = (200, -100)
+        int ui:nodegraph:node:stackingOrder = 90
+    }
+
+    # Mix metallic values
+    def Shader "FinalMetallic"
+    {
+        uniform token info:id = "ND_mix_float"
+        float inputs:fg.connect = </IceCapMaterial.inputs:iceMetallic>
+        float inputs:bg = 0.1  # Base metallic
+        float inputs:mix.connect = </IceCapMaterial/FinalIceCoverage.outputs:out>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (200, -150)
+        int ui:nodegraph:node:stackingOrder = 95
+    }
+
+    # Mix roughness values
+    def Shader "FinalRoughness"
+    {
+        uniform token info:id = "ND_mix_float"
+        float inputs:fg.connect = </IceCapMaterial.inputs:iceRoughness>
+        float inputs:bg = 0.8  # Base roughness
+        float inputs:mix.connect = </IceCapMaterial/FinalIceCoverage.outputs:out>
+        float outputs:out
+        float2 ui:nodegraph:node:pos = (200, -200)
+        int ui:nodegraph:node:stackingOrder = 96
+    }
+}
