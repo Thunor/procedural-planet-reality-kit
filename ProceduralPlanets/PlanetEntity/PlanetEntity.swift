@@ -7,17 +7,22 @@
 
 import Foundation
 import RealityKit
+import ModelIO
 import Combine
 import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
+
+// Use typealias to specify which IceCapConfiguration to use
+// This resolves the ambiguity between the two struct definitions
+typealias PlanetIceCapConfiguration = ProceduralPlanets.IceCapConfiguration
 
 @MainActor
 class PlanetEntity: Entity {
     
     private var iceCapMaterial: IceCapMaterial?
     
-    init(meshConfiguration: MeshConfiguration, imageTexture: CGImage?, iceCapConfiguration: IceCapConfiguration? = nil) async throws {
+    init(meshConfiguration: MeshConfiguration, imageTexture: CGImage?, iceCapConfiguration: PlanetIceCapConfiguration? = nil) async throws {
         super.init()
         
         // Initialize ice cap material if enabled
@@ -38,7 +43,7 @@ class PlanetEntity: Entity {
         fatalError("init() has not been implemented")
     }
     
-    func updatePlanetConfig(meshConfiguration: MeshConfiguration, iceCapConfiguration: IceCapConfiguration? = nil) async throws {
+    func updatePlanetConfig(meshConfiguration: MeshConfiguration, iceCapConfiguration: PlanetIceCapConfiguration? = nil) async throws {
         let shapeGenerator = ShapeGenerator(shapeSettings: meshConfiguration.shapeSettings)
         let meshResource = try await createMeshResource(resolution: meshConfiguration.resolution,
                                                         shapeGenerator: shapeGenerator)
@@ -130,6 +135,51 @@ class PlanetEntity: Entity {
         return material
     }
     
+    public func exportPlanet() {
+//        guard let modelComponent = self.modelComponent else {
+//            print("No model component found for export.")
+//            return
+//        }
+//        
+//        let exportURL = FileManager.default.temporaryDirectory.appendingPathComponent("exportedPlanet.usdz")
+//        
+//        do {
+//        
+//            try Entity.export([self], to: exportURL)
+//            print("Planet exported to: \(exportURL.path)")
+//        } catch {
+//            print("Failed to export planet: \(error)")
+//        }
+    }
+    
+//    import RealityKit
+//    import ModelIO
+
+    func exportToUSDZ(modelEntity: ModelEntity, to url: URL) throws {
+        // Create MDLAsset
+        let asset = MDLAsset()
+        
+        // Extract mesh from ModelEntity
+        guard let modelComponent = modelEntity.model,
+//              let mesh = modelComponent.mesh.lowLevelMesh
+              let mesh = modelComponent.mesh.lowLevelMesh as? MeshResource else {
+            throw ExportError.noMesh
+        }
+        
+        // Convert RealityKit mesh to MDLMesh
+        let mdlMesh = mesh.contents.models.first?.parts.first // This gets tricky
+        
+        // Create MDLObject and add to asset
+        let mdlObject = MDLObject() // Convert geometry here
+        asset.add(mdlObject)
+        
+        // Export as USDZ
+        try asset.export(to: url)
+    }
+
+    enum ExportError: Error {
+        case noMesh
+    }
     
 }
 

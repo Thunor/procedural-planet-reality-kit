@@ -39,6 +39,10 @@ struct MaterialSettingsView: View {
                         addGradientPoint()
                     }
                 }
+                
+                Section(header: Text("Ice Caps")) {
+                    IceCapSettingsView(iceCapConfiguration: $viewModel.iceCapConfiguration)
+                }
             }
             
             TexturePreview(image: viewModel.textureImage)

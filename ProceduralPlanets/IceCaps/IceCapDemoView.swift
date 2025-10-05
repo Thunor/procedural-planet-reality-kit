@@ -12,6 +12,7 @@ import RealityKit
 struct IceCapDemoView: View {
     
     @State private var iceCapMaterial = IceCapMaterial.earthLike()
+    @State private var iceCapConfiguration = IceCapConfiguration.earthLike
     @State private var planetEntity: PlanetEntity?
     @State private var isLoading = false
     @State private var selectedPreset: IceCapPreset = .earthLike
@@ -96,12 +97,15 @@ struct IceCapDemoView: View {
                     .foregroundColor(.secondary)
                     .padding(.bottom)
                 
-                IceCapSettingsView(iceCapMaterial: iceCapMaterial)
+                IceCapSettingsView(iceCapConfiguration: $iceCapConfiguration)
             }
             .frame(minWidth: 350, maxWidth: 450)
             .padding()
         }
         .navigationTitle("Ice Cap Shader Demo")
+        .onChange(of: iceCapConfiguration.settings) { _, newSettings in
+            iceCapMaterial.settings = newSettings
+        }
         .task {
             await loadIceCapMaterial()
         }
@@ -114,6 +118,10 @@ struct IceCapDemoView: View {
         isLoading = true
         
         do {
+            // Ensure configuration settings match the selected preset
+            iceCapConfiguration.settings = selectedPreset.settings
+            iceCapMaterial.settings = selectedPreset.settings
+            
             try await iceCapMaterial.loadMaterial()
             await createPlanetEntity()
             isLoading = false
@@ -128,12 +136,11 @@ struct IceCapDemoView: View {
         do {
             // Create sample planet configuration
             let meshConfig = createSampleMeshConfiguration()
-            let iceCapConfig = IceCapConfiguration(enabled: true, settings: iceCapMaterial.settings)
             
             let planet = try await PlanetEntity(
                 meshConfiguration: meshConfig,
                 imageTexture: nil,
-                iceCapConfiguration: iceCapConfig
+                iceCapConfiguration: iceCapConfiguration
             )
             
             // Position and scale the planet
@@ -149,6 +156,8 @@ struct IceCapDemoView: View {
     
     private func applyPreset(_ preset: IceCapPreset) {
         iceCapMaterial.settings = preset.settings
+        iceCapConfiguration.settings = preset.settings
+        iceCapConfiguration.enabled = true
         
         // Recreate the planet with new settings
         Task {

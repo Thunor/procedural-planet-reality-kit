@@ -44,8 +44,11 @@ struct PlanetView: View {
             fillLightEntity.transform.rotation = simd_quatf(angle: -.pi / 3, axis: [-1, 1, 0])
             root.addChild(fillLightEntity)
             
-            let planet = try! await PlanetEntity(meshConfiguration: viewModel.meshConfiguration,
-                                                 imageTexture: viewModel.textureImage)
+            let planet = try! await PlanetEntity(
+                meshConfiguration: viewModel.meshConfiguration,
+                imageTexture: viewModel.textureImage,
+                iceCapConfiguration: viewModel.iceCapConfiguration.enabled ? viewModel.iceCapConfiguration : nil
+            )
             self.planetEntity = planet
             
             // Scale the planet based on its radius for consistent library view size
@@ -83,6 +86,20 @@ struct PlanetView: View {
         .onChange(of: self.viewModel.textureImage) { _, newValue in
             if let newValue {
                 self.planetEntity?.updateImageTexture(newValue)
+            }
+        }
+        .onChange(of: self.viewModel.iceCapConfiguration) { _, newConfig in
+            Task {
+                // Recreate the planet with new ice cap configuration
+                if let planet = self.planetEntity {
+                    try! await planet.updatePlanetConfig(
+                        meshConfiguration: self.viewModel.meshConfiguration,
+                        iceCapConfiguration: newConfig.enabled ? newConfig : nil
+                    )
+                    if let image = self.viewModel.textureImage {
+                        planet.updateImageTexture(image)
+                    }
+                }
             }
         }
         .realityViewCameraControls(.orbit)

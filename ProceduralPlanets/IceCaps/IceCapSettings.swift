@@ -18,7 +18,7 @@ import AppKit
 #endif
 
 /// Configuration settings for procedural ice caps on planets
-struct IceCapSettings: Equatable, Codable {
+struct IceCapSettings: Equatable, Codable, Hashable {
     
     // MARK: - Ice Cap Coverage
     
@@ -226,6 +226,36 @@ struct IceCapSettings: Equatable, Codable {
         
         // Encode SIMD3<Float> as array
         try container.encode([iceColor.x, iceColor.y, iceColor.z], forKey: .iceColor)
+    }
+    
+    // MARK: - Hashable Conformance
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(northCapThreshold)
+        hasher.combine(southCapThreshold)
+        hasher.combine(falloffSharpness)
+        hasher.combine(useElevationMask)
+        hasher.combine(minElevationForIce)
+        hasher.combine(maxElevationForIce)
+        hasher.combine(iceThickness)
+        hasher.combine(iceRoughness)
+        hasher.combine(iceMetallic)
+        hasher.combine(iceSubsurface)
+        hasher.combine(useNoiseVariation)
+        hasher.combine(noiseScale)
+        hasher.combine(noiseStrength)
+        hasher.combine(noiseOctaves)
+        hasher.combine(globalTemperature)
+        hasher.combine(seasonalVariation)
+        hasher.combine(seasonAngle)
+        hasher.combine(enableIceFlow)
+        hasher.combine(iceFlowScale)
+        hasher.combine(cracksIntensity)
+        
+        // Hash SIMD3<Float> components
+        hasher.combine(iceColor.x)
+        hasher.combine(iceColor.y)
+        hasher.combine(iceColor.z)
     }
     
     // MARK: - Default Configurations

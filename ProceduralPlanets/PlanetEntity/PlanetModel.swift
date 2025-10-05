@@ -432,10 +432,7 @@ extension PlanetModel {
             ]
         )
         
-        let iceCapConfiguration = IceCapConfiguration(
-            enabled: true,
-            settings: .earthLike
-        )
+        let iceCapConfiguration = IceCapConfiguration.earthLike
         
         return PlanetModel(
             name: "Sample Planet",
@@ -448,31 +445,55 @@ extension PlanetModel {
 
 // MARK: - Ice Cap Configuration
 
-struct IceCapConfiguration: Equatable, Codable {
-    
-    var enabled: Bool
-    var settings: IceCapSettings
-    
-    init(enabled: Bool = false, settings: IceCapSettings = .earthLike) {
-        self.enabled = enabled
-        self.settings = settings
-    }
-    
-    init(from decoder: Decoder) throws {
-        self.enabled = false
-        self.settings = .earthLike
-    }
-    
-    /// Default configuration with ice caps disabled
-    static let disabled = IceCapConfiguration(enabled: false)
-    
-    /// Earth-like ice cap configuration
-    static let earthLike = IceCapConfiguration(enabled: true, settings: .earthLike)
-    
-    /// Icy world configuration
-    static let icyWorld = IceCapConfiguration(enabled: true, settings: .icyWorld)
-    
-    /// Desert world configuration (minimal ice)
-    static let desert = IceCapConfiguration(enabled: true, settings: .desert)
-    
-}
+// Define IceCapSettings first to avoid forward references
+//enum IceCapSettings: String, Codable, CaseIterable {
+//    case earthLike = "Earth-like"
+//    case icyWorld = "Icy World"
+//    case desert = "Desert World"
+//    
+//    var displayName: String {
+//        return self.rawValue
+//    }
+//}
+
+//struct IceCapConfiguration: Equatable, Codable {
+//    
+//    var enabled: Bool
+//    var settings: IceCapSettings
+//    
+//    init(enabled: Bool = false, settings: IceCapSettings = .earthLike) {
+//        self.enabled = enabled
+//        self.settings = settings
+//    }
+//    
+//    init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        self.enabled = try container.decodeIfPresent(Bool.self, forKey: .enabled) ?? false
+//        self.settings = try container.decodeIfPresent(IceCapSettings.self, forKey: .settings) ?? .earthLike
+//    }
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case enabled
+//        case settings
+//    }
+//    
+//    /// Create predefined configurations
+//    static func createDisabled() -> IceCapConfiguration {
+//        return IceCapConfiguration(enabled: false)
+//    }
+//    
+//    /// Create Earth-like ice cap configuration
+//    static func createEarthLike() -> IceCapConfiguration {
+//        return IceCapConfiguration(enabled: true, settings: .earthLike)
+//    }
+//    
+//    /// Create Icy world configuration
+//    static func createIcyWorld() -> IceCapConfiguration {
+//        return IceCapConfiguration(enabled: true, settings: .icyWorld)
+//    }
+//    
+//    /// Create Desert world configuration (minimal ice)
+//    static func createDesert() -> IceCapConfiguration {
+//        return IceCapConfiguration(enabled: true, settings: .desert)
+//    }
+//}

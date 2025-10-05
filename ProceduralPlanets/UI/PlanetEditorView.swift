@@ -43,6 +43,7 @@ class PlanetEditorViewModel {
             self.textureImage = createProceduralPlanetTexture(size: .init(width: 200, height: 100))
         }
     }
+    var iceCapConfiguration: IceCapConfiguration
     var planetName: String
     
     var textureImage: CGImage?
@@ -53,6 +54,7 @@ class PlanetEditorViewModel {
         self.planetModel = planetModel
         self.meshConfiguration = planetModel.meshConfiguration ?? MeshConfiguration(resolution: 50, shapeSettings: ShapeSettings(radius: 1.0, noiseLayers: []))
         self.textureConfiguration = planetModel.textureConfiguration ?? TextureConfiguration(gradientPoints: [])
+        self.iceCapConfiguration = planetModel.iceCapConfiguration ?? IceCapConfiguration.disabled
         self.planetName = planetModel.name
         self.textureImage = createProceduralPlanetTexture(size: .init(width: 200, height: 100))
     }
@@ -61,6 +63,7 @@ class PlanetEditorViewModel {
         planetModel.name = planetName
         planetModel.meshConfiguration = self.meshConfiguration
         planetModel.textureConfiguration = self.textureConfiguration
+        planetModel.iceCapConfiguration = self.iceCapConfiguration
     }
     
     func createProceduralPlanetTexture(size: CGSize) -> CGImage? {
