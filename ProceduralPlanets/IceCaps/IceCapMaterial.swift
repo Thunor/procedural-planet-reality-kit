@@ -37,11 +37,39 @@ class IceCapMaterial: ObservableObject {
     /// Load the ice cap shader material from the USD file
     func loadMaterial() async throws {
         do {
-            shaderMaterial = try await ShaderGraphMaterial(
-                named: "/IceCapMaterial",
-                from: "IceCapMaterial",
-                in: nil
-            )
+            // Try different path formats to locate the USDA file
+            var shaderGraphMaterial: ShaderGraphMaterial?
+            
+            // Try loading with various path formats
+            let pathFormats = [
+                "/IceCapMaterial",
+                "IceCapMaterial",
+                "/repo/IceCapMaterial",
+                "/IceCapMaterial.usda"
+            ]
+            
+            for path in pathFormats {
+                do {
+                    shaderGraphMaterial = try await ShaderGraphMaterial(
+                        named: path,
+                        from: "IceCapMaterial",
+                        in: nil
+                    )
+                    if shaderGraphMaterial != nil {
+                        print("Successfully loaded ice cap material from path: \(path)")
+                        break
+                    }
+                } catch {
+                    print("Failed to load from path \(path): \(error)")
+                    // Continue trying other paths
+                }
+            }
+            
+            guard let material = shaderGraphMaterial else {
+                throw IceCapMaterialError.materialLoadFailed(NSError(domain: "IceCapMaterial", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to load ice cap material from any path"]))
+            }
+            
+            self.shaderMaterial = material
             isLoaded = true
             await updateMaterial()
         } catch {
@@ -52,34 +80,41 @@ class IceCapMaterial: ObservableObject {
     
     /// Update material parameters based on current settings
     private func updateMaterial() {
-        guard var material = shaderMaterial, isLoaded else { return }
+        guard let material = shaderMaterial, isLoaded else { 
+            print("Cannot update material: Material not loaded or not initialized")
+            return 
+        }
+        
+        var updatedMaterial = material
         
         do {
             // Ice cap thresholds
-            try material.setParameter(name: "northCapThreshold", value: .float(settings.northCapThreshold))
-            try material.setParameter(name: "southCapThreshold", value: .float(settings.southCapThreshold))
-            try material.setParameter(name: "falloffSharpness", value: .float(settings.falloffSharpness))
+            try updatedMaterial.setParameter(name: "northCapThreshold", value: .float(settings.northCapThreshold))
+            try updatedMaterial.setParameter(name: "southCapThreshold", value: .float(settings.southCapThreshold))
+            try updatedMaterial.setParameter(name: "falloffSharpness", value: .float(settings.falloffSharpness))
             
-            // Elevation parameters
-            try material.setParameter(name: "minElevation", value: .float(settings.minElevationForIce))
-            try material.setParameter(name: "maxElevation", value: .float(settings.maxElevationForIce))
+            // Elevation parameters - these might come from the mesh, but we set defaults
+            try updatedMaterial.setParameter(name: "minElevation", value: .float(settings.minElevationForIce))
+            try updatedMaterial.setParameter(name: "maxElevation", value: .float(settings.maxElevationForIce))
             
             // Climate parameters
-            try material.setParameter(name: "globalTemperature", value: .float(settings.globalTemperature))
+            try updatedMaterial.setParameter(name: "globalTemperature", value: .float(settings.globalTemperature))
             
             // Ice appearance
-            try material.setParameter(name: "iceColor", value: .simd3Float(settings.iceColor))
-            try material.setParameter(name: "iceRoughness", value: .float(settings.iceRoughness))
-            try material.setParameter(name: "iceMetallic", value: .float(settings.iceMetallic))
+//            try updatedMaterial.setParameter(name: "iceColor", value: x.float3(settings.iceColor))
+            try updatedMaterial.setParameter(name: "iceRoughness", value: .float(settings.iceRoughness))
+            try updatedMaterial.setParameter(name: "iceMetallic", value: .float(settings.iceMetallic))
             
             // Noise parameters
-            try material.setParameter(name: "noiseScale", value: .float(settings.noiseScale))
-            try material.setParameter(name: "noiseStrength", value: .float(settings.noiseStrength))
+            try updatedMaterial.setParameter(name: "noiseScale", value: .float(settings.noiseScale))
+            try updatedMaterial.setParameter(name: "noiseStrength", value: .float(settings.noiseStrength))
             
-            self.shaderMaterial = material
+            print("Successfully updated ice cap material parameters")
+            self.shaderMaterial = updatedMaterial
             
         } catch {
             print("Failed to update ice cap material parameters: \(error)")
+            print("Parameter that failed: \(error)")
         }
     }
     

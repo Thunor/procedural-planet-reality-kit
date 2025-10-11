@@ -1,4 +1,4 @@
-# Ice Cap Shader System
+The ice cap settings are now fixed and should be working properly.
 
 A sophisticated shader system for adding configurable ice caps to procedural planets in RealityKit-based applications.
 

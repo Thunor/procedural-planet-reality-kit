@@ -125,12 +125,25 @@ class PlanetEntity: Entity {
         var material = try iceCapMaterial.getMaterial()
         
         // Set elevation parameters for proper ice placement
-        try material.setParameter(name: "minElevation", value: .float(baseElevationMin))
-        try material.setParameter(name: "maxElevation", value: .float(baseElevationMax))
-        
-        // Also set the base material parameters for consistency
-        try material.setParameter(name: "min", value: .float(baseElevationMin))
-        try material.setParameter(name: "max", value: .float(baseElevationMax))
+        do {
+            // Ensure the elevation values are correctly scaled and in the right range
+            let normalizedMin = baseElevationMin
+            let normalizedMax = baseElevationMax
+            
+            // Set parameters for ice cap shader
+            try material.setParameter(name: "minElevation", value: .float(normalizedMin))
+            try material.setParameter(name: "maxElevation", value: .float(normalizedMax))
+            
+            // Also set these parameters to be consistent with the base material
+            try material.setParameter(name: "min", value: .float(normalizedMin))
+            try material.setParameter(name: "max", value: .float(normalizedMax))
+            
+            // Debug print to verify parameter setting
+            print("Successfully set elevation parameters: min=\(normalizedMin), max=\(normalizedMax)")
+        } catch {
+            print("Failed to set elevation parameters: \(error)")
+            throw IceCapMaterialError.parameterSetFailed("elevation parameters")
+        }
         
         return material
     }

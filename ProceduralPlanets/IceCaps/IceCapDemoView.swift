@@ -103,8 +103,18 @@ struct IceCapDemoView: View {
             .padding()
         }
         .navigationTitle("Ice Cap Shader Demo")
-        .onChange(of: iceCapConfiguration.settings) { _, newSettings in
+        .onChange(of: iceCapConfiguration.settings) { oldSettings, newSettings in
+            // Update material settings and force refresh when configuration changes
             iceCapMaterial.settings = newSettings
+            
+            // Regenerate planet if settings change substantially
+            if oldSettings.northCapThreshold != newSettings.northCapThreshold ||
+               oldSettings.southCapThreshold != newSettings.southCapThreshold ||
+               oldSettings.useElevationMask != newSettings.useElevationMask {
+                Task {
+                    await createPlanetEntity()
+                }
+            }
         }
         .task {
             await loadIceCapMaterial()

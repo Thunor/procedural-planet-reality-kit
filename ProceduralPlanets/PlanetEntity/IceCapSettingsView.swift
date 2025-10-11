@@ -39,7 +39,9 @@ struct IceCapSettingsView: View {
                     .buttonStyle(.bordered)
                 }
                 
-                // Create the material with the current settings
+                // NOTE: We shouldn't create a new material here.
+                // Instead, we should be using a reference to the actual material being used by the planet.
+                // For now, this is a temporary solution until we can properly fix the binding.
                 let iceCapMaterial = IceCapMaterial(settings: iceCapConfiguration.settings)
                 
                 Divider()
